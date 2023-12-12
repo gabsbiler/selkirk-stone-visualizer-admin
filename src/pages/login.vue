@@ -1,12 +1,28 @@
 <script setup lang="ts">
 import { VNodeRenderer } from '@layouts/components/VNodeRenderer'
 import { themeConfig } from '@themeConfig'
+import { emailValidator, passwordValidator, requiredValidator } from '@validators'
+
+const route = useRouter()
 
 const form = ref({
   email: '',
   password: '',
   remember: false,
 })
+
+const invalidCredentialsError = ref(false)
+
+const submitForm = () => {
+  if (form.value.email === 'admin@admin.com' && form.value.password === '@Dm1n@Dm1n') {
+    localStorage.setItem('loggedIn', '1')
+    route.push('/')
+  }
+  else {
+    invalidCredentialsError.value = true
+    console.log(form.value.email + form.value.password)
+  }
+}
 
 const isPasswordVisible = ref(false)
 </script>
@@ -37,7 +53,7 @@ const isPasswordVisible = ref(false)
         </VCardText>
 
         <VCardText>
-          <VForm @submit.prevent="() => {}">
+          <VForm @submit.prevent="submitForm">
             <VRow>
               <!-- email -->
               <VCol cols="12">
@@ -46,6 +62,7 @@ const isPasswordVisible = ref(false)
                   autofocus
                   label="Email"
                   type="email"
+                  :rules="[requiredValidator, emailValidator]"
                 />
               </VCol>
 
@@ -56,6 +73,7 @@ const isPasswordVisible = ref(false)
                   label="Password"
                   :type="isPasswordVisible ? 'text' : 'password'"
                   :append-inner-icon="isPasswordVisible ? 'bx-hide' : 'bx-show'"
+                  :rules="[requiredValidator, passwordValidator]"
                   @click:append-inner="isPasswordVisible = !isPasswordVisible"
                 />
 
@@ -81,6 +99,14 @@ const isPasswordVisible = ref(false)
         </VCardText>
       </VCard>
     </div>
+    <VSnackbar
+      v-model="invalidCredentialsError"
+      location="top end"
+      variant="flat"
+      color="error"
+    >
+      Invalid Credentials
+    </VSnackbar>
   </div>
 </template>
 

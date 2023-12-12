@@ -1,4 +1,10 @@
 <script setup lang="ts">
+import { VDataTable } from 'vuetify/labs/VDataTable'
+
+const props = defineProps({
+  search: String,
+})
+
 const tableContent = ref([
   {
     id: 1,
@@ -391,87 +397,205 @@ const tableContent = ref([
     },
   },
 ])
+
+const isDialogVisible = ref(false)
+const selectedUser = ref()
+
+const headers = [
+  { title: 'USER', key: 'name' },
+  { title: 'EMAIL', key: 'email' },
+  { title: 'PERMISSION', key: 'permission' },
+  { title: 'ACTION', key: 'action' },
+]
+
+const selectUser = (user: unknown) => {
+  selectedUser.value = user
+  isDialogVisible.value = true
+}
+
+const deleteUser = (id: number) => {
+  tableContent.value = tableContent.value.filter(user => user.id !== id)
+}
 </script>
 
 <template>
-  <VTable
-    class="text-no-wrap"
-    style="max-block-size: 86vh;"
+  <VDataTable
+    :headers="headers"
+    :items="tableContent"
+    :search="props.search"
+    :items-per-page="10"
+    show-select
   >
-    <thead>
-      <tr>
-        <th scope="col">
-          User
-        </th>
-        <th scope="col">
-          Email
-        </th>
-        <th scope="col">
-          Permission
-        </th>
-        <th
-          scope="col"
-          class="text-center"
-        >
-          Action
-        </th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr
-        v-for="content in tableContent"
-        :key="content.name"
+    <template #item.permission="{ item }">
+      <span
+        v-for="(value, key) in item.props.title.permission"
+        :key="key"
       >
-        <td>{{ content.name }}</td>
-        <td>{{ content.email }}</td>
-        <td
-          class="d-flex"
-          style="align-items: center;"
+        <VIcon
+          v-if="key === 'administrator' && value === true"
+          icon="bx-user"
+          :class="key"
+        />
+        <VIcon
+          v-if="key === 'analytics' && value === true"
+          icon="bx-stats"
+          :class="key"
+        />
+        <VIcon
+          v-if="key === 'support' && value === true"
+          icon="bx-headphone"
+          :class="key"
+        />
+        <VIcon
+          v-if="key === 'product_managing' && value === true"
+          icon="bx-box"
+          :class="key"
+        />
+        <VIcon
+          v-if="key === 'content_managing' && value === true"
+          icon="bx-edit"
+          :class="key"
+        />
+      </span>
+    </template>
+
+    <template #item.action="{ item }">
+      <div class="flex-center">
+        <VBtn
+          variant="text"
+          size="small"
+          @click="() => selectUser(item)"
         >
-          <span
-            v-for="(value, key) in content.permission"
-            :key="key"
-          >
-            <VIcon
-              v-if="key === 'administrator' && value === true"
-              icon="bx-user"
-              :class="key"
-            />
-            <VIcon
-              v-if="key === 'analytics' && value === true"
-              icon="bx-stats"
-              :class="key"
-            />
-            <VIcon
-              v-if="key === 'support' && value === true"
-              icon="bx-headphone"
-              :class="key"
-            />
-            <VIcon
-              v-if="key === 'product_managing' && value === true"
-              icon="bx-box"
-              :class="key"
-            />
-            <VIcon
-              v-if="key === 'content_managing' && value === true"
-              icon="bx-edit"
-              :class="key"
-            />
+          Edit
+        </VBtn>
+      </div>
+    </template>
+  </VDataTable>
+
+  <VDialog
+    v-model="isDialogVisible"
+    max-width="500"
+  >
+    <VCard>
+      <VCardText style="padding: 2rem;">
+        <VForm>
+          <VRow class="mb-3">
+            <VCol cols="12">
+              <VTextField
+                v-model="selectedUser.raw.name"
+                label="Name"
+              />
+            </VCol>
+            <VCol cols="12">
+              <VTextField
+                v-model="selectedUser.raw.email"
+                label="Email"
+              />
+            </VCol>
+            <VCol cols="12">
+              <VFileInput
+                label="Avatar Upload"
+                accept="image/png, image/jpeg, image/bmp"
+                placeholder="Pick an avatar"
+                prepend-icon="bx-camera"
+              />
+            </VCol>
+          </VRow>
+          <span class="text-h6">
+            Permission
           </span>
-        </td>
-        <td>
-          <div style="display: flex; align-items: center; justify-content: center;">
-            <VBtn
-              variant="text"
-              size="small"
+          <VRow class="mt-1">
+            <VCol
+              class="d-flex align-center"
+              cols="4"
             >
-              Edit
-            </VBtn>
+              <VCheckboxBtn
+                id="administrator"
+                v-model="selectedUser.raw.permission.administrator"
+              />
+              <VLabel for="administrator">
+                Administrator
+              </VLabel>
+            </VCol>
+            <VCol
+              class="d-flex align-center"
+              cols="4"
+            >
+              <VCheckboxBtn
+                id="analytics"
+                v-model="selectedUser.raw.permission.analytics"
+              />
+              <VLabel for="analytics">
+                Analytics
+              </VLabel>
+            </VCol>
+            <VCol
+              class="d-flex align-center"
+              cols="4"
+            >
+              <VCheckboxBtn
+                id="content_managing"
+                v-model="selectedUser.raw.permission.content_managing"
+              />
+              <VLabel for="content_managing">
+                Content Managing
+              </VLabel>
+            </VCol>
+            <VCol
+              class="d-flex align-center"
+              cols="4"
+            >
+              <VCheckboxBtn
+                id="product_managing"
+                v-model="selectedUser.raw.permission.product_managing"
+              />
+              <VLabel for="product_managing">
+                Product Managing
+              </VLabel>
+            </VCol>
+            <VCol
+              class="d-flex align-center"
+              cols="4"
+            >
+              <VCheckboxBtn
+                id="support"
+                v-model="selectedUser.raw.permission.support"
+              />
+              <VLabel for="support">
+                Support
+              </VLabel>
+            </VCol>
+          </VRow>
+
+          <div
+            class="d-flex mt-5"
+            style="justify-content: space-between;"
+          >
+            <div>
+              <VBtn
+                color="error"
+                variant="outlined"
+                @click="deleteUser(selectedUser.raw.id)"
+              >
+                Delete
+              </VBtn>
+            </div>
+            <div class="d-flex  gap-x-3">
+              <VBtn
+                variant="outlined"
+                @click="isDialogVisible = false"
+              >
+                Back
+              </VBtn>
+              <VBtn>
+                Save Changes
+              </VBtn>
+            </div>
           </div>
-        </td>
-      </tr>
-    </tbody>
-  </VTable>
+        </VForm>
+      </VCardText>
+    </VCard>
+  </VDialog>
 </template>
 
 <style lang="scss">

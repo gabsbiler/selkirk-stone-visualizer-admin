@@ -9,6 +9,17 @@ const router = createRouter({
   ],
 })
 
+router.beforeEach((to, from, next) => {
+  const loggedIn = localStorage.getItem('loggedIn')
+
+  // Check if 'loggedIn' is '0' and the current route is not '/login'
+  if (loggedIn === '0' && to.path !== '/login')
+    next('/login')
+
+  else
+    next()
+})
+
 // Docs: https://router.vuejs.org/guide/advanced/navigation-guards.html#global-before-guards
 
 export default router

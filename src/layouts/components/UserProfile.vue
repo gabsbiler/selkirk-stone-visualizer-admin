@@ -1,5 +1,12 @@
 <script setup lang="ts">
-import avatar1 from '@images/avatars/avatar-1.png'
+import avatar1 from '@images/selkirk-logo-full.png'
+
+const route = useRouter()
+
+const logout = () => {
+  localStorage.setItem('loggedIn', '0')
+  route.push('/login')
+}
 </script>
 
 <template>
@@ -48,9 +55,8 @@ import avatar1 from '@images/avatars/avatar-1.png'
             </template>
 
             <VListItemTitle class="font-weight-semibold">
-              John Doe
+              Admin User
             </VListItemTitle>
-            <VListItemSubtitle>Admin</VListItemSubtitle>
           </VListItem>
 
           <VDivider class="my-2" />
@@ -81,46 +87,20 @@ import avatar1 from '@images/avatars/avatar-1.png'
             <VListItemTitle>Settings</VListItemTitle>
           </VListItem>
 
-          <!-- 👉 Pricing -->
-          <VListItem link>
-            <template #prepend>
-              <VIcon
-                class="me-2"
-                icon="bx-dollar"
-                size="22"
-              />
-            </template>
-
-            <VListItemTitle>Pricing</VListItemTitle>
-          </VListItem>
-
-          <!-- 👉 FAQ -->
-          <VListItem link>
-            <template #prepend>
-              <VIcon
-                class="me-2"
-                icon="bx-help-circle"
-                size="22"
-              />
-            </template>
-
-            <VListItemTitle>FAQ</VListItemTitle>
-          </VListItem>
-
           <!-- Divider -->
           <VDivider class="my-2" />
 
           <!-- 👉 Logout -->
-          <VListItem to="/login">
+          <VListItem>
             <template #prepend>
               <VIcon
                 class="me-2"
                 icon="bx-log-out"
                 size="22"
+                @click="logout"
               />
+              <VListItemTitle>Logout</VListItemTitle>
             </template>
-
-            <VListItemTitle>Logout</VListItemTitle>
           </VListItem>
         </VList>
       </VMenu>
