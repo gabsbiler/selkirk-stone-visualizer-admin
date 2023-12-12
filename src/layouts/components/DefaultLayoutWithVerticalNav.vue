@@ -4,7 +4,6 @@ import navItems from '@/navigation/vertical'
 import { useThemeConfig } from '@core/composable/useThemeConfig'
 
 // Components
-import Footer from '@/layouts/components/Footer.vue'
 import NavbarThemeSwitcher from '@/layouts/components/NavbarThemeSwitcher.vue'
 import UserProfile from '@/layouts/components/UserProfile.vue'
 
@@ -59,9 +58,11 @@ const globalThemeBackground = computed(() => global.current.value.colors.backgro
     </RouterView>
 
     <!-- 👉 Footer -->
-    <template #footer>
+    <!--
+      <template #footer>
       <Footer />
-    </template>
+      </template>
+    -->
 
     <!-- 👉 Customizer -->
     <!-- <TheCustomizer /> -->

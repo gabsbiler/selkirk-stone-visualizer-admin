@@ -1,8 +1,4 @@
 <script setup lang="ts">
-import { useGenerateImageVariant } from '@/@core/composable/useGenerateImageVariant'
-import AuthProvider from '@/views/pages/authentication/AuthProvider.vue'
-import boyWithRocketDark from '@images/illustrations/boy-with-rocket-dark.png'
-import boyWithRocketLight from '@images/illustrations/boy-with-rocket-light.png'
 import { VNodeRenderer } from '@layouts/components/VNodeRenderer'
 import { themeConfig } from '@themeConfig'
 
@@ -12,60 +8,31 @@ const form = ref({
   remember: false,
 })
 
-const boyWithRocket = useGenerateImageVariant(boyWithRocketLight, boyWithRocketDark)
 const isPasswordVisible = ref(false)
 </script>
 
 <template>
-  <VRow
-    no-gutters
-    class="auth-wrapper"
-  >
-    <VCol
-      md="8"
-      class="d-none d-md-flex"
-    >
-      <!-- illustration -->
-      <div class="position-relative w-100 pa-8">
-        <div class="d-flex align-center justify-center w-100 h-100">
-          <VImg
-            max-width="700"
-            :src="boyWithRocket"
-            class="auth-illustration"
-          />
-        </div>
-      </div>
-    </VCol>
-
-    <VCol
-      cols="12"
-      md="4"
-      class="auth-card-v2 d-flex align-center justify-center"
-      style="background-color: rgb(var(--v-theme-surface));"
-    >
+  <div class="auth-wrapper d-flex align-center justify-center pa-4">
+    <div class="position-relative">
       <VCard
-        flat
-        :max-width="500"
-        class="mt-12 mt-sm-0 pa-6"
+        class="auth-card px-2"
+        max-width="450"
+        min-width="450"
       >
-        <VCardItem class="justify-start">
+        <VCardItem class="justify-center">
           <template #prepend>
             <div class="d-flex">
               <VNodeRenderer :nodes="themeConfig.app.logo" />
             </div>
           </template>
-
-          <VCardTitle class="auth-title">
-            {{ themeConfig.app.title }}
-          </VCardTitle>
         </VCardItem>
 
-        <VCardText>
-          <h6 class="text-h6 mb-1">
-            Welcome to {{ themeConfig.app.title }}! 👋🏻
+        <VCardText class="text-center ">
+          <h6 class="text-h4 text-primary mb-1">
+            Welcome
           </h6>
           <p class="mb-0">
-            Please sign-in to your account and start the adventure
+            Sign in your account
           </p>
         </VCardText>
 
@@ -92,64 +59,29 @@ const isPasswordVisible = ref(false)
                   @click:append-inner="isPasswordVisible = !isPasswordVisible"
                 />
 
-                <div class="d-flex align-center flex-wrap justify-space-between mt-2 mb-4">
+                <!-- remember me checkbox -->
+                <div class="d-flex align-center justify-space-between flex-wrap mt-2 mb-4">
                   <VCheckbox
                     v-model="form.remember"
                     label="Remember me"
                   />
-                  <a
-                    class="text-primary text-sm ms-2 mb-1"
-                    href="#"
-                  >
-                    Forgot Password?
-                  </a>
                 </div>
 
-                <VBtn
-                  block
-                  type="submit"
-                  class="mb-1"
-                >
-                  Login
-                </VBtn>
-              </VCol>
+                <div class="d-flex">
+                  <VSpacer />
+                  <VBtn type="submit">
+                    Login
+                  </VBtn>
+                </div>
 
-              <!-- create account -->
-              <VCol
-                cols="12"
-                class="text-center text-base d-flex justify-center flex-wrap"
-              >
-                <span>New on our platform?</span>
-                <a
-                  class="text-primary ms-2"
-                  href="#"
-                >
-                  Create an account
-                </a>
-              </VCol>
-
-              <VCol
-                cols="12"
-                class="d-flex align-center"
-              >
-                <VDivider />
-                <span class="mx-4">or</span>
-                <VDivider />
-              </VCol>
-
-              <!-- auth providers -->
-              <VCol
-                cols="12"
-                class="text-center"
-              >
-                <AuthProvider />
+                <!-- login button -->
               </VCol>
             </VRow>
           </VForm>
         </VCardText>
       </VCard>
-    </VCol>
-  </VRow>
+    </div>
+  </div>
 </template>
 
 <style lang="scss">
