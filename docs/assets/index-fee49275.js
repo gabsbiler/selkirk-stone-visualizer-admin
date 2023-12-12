@@ -1,0 +1,1 @@
+import{G as e,o as t,c,m as s}from"./index-d71eb023.js";const o={},n=s("h1",{class:"text-5"}," PAGES > CONTENT ",-1),a=[n];function r(_,d){return t(),c("section",null,a)}const l=e(o,[["render",r]]);export{l as default};

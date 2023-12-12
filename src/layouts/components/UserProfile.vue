@@ -93,13 +93,17 @@ const logout = () => {
           <!-- 👉 Logout -->
           <VListItem>
             <template #prepend>
-              <VIcon
-                class="me-2"
-                icon="bx-log-out"
-                size="22"
+              <Button
+                class="d-flex"
                 @click="logout"
-              />
-              <VListItemTitle>Logout</VListItemTitle>
+              >
+                <VIcon
+                  class="me-2"
+                  icon="bx-log-out"
+                  size="22"
+                />
+                <VListItemTitle>Logout</VListItemTitle>
+              </Button>
             </template>
           </VListItem>
         </VList>

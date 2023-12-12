@@ -10,14 +10,20 @@ const router = createRouter({
 })
 
 router.beforeEach((to, from, next) => {
+  // Retrieve the 'loggedIn' value from localStorage
   const loggedIn = localStorage.getItem('loggedIn')
 
-  // Check if 'loggedIn' is '0' and the current route is not '/login'
-  if (loggedIn === '0' && to.path !== '/login')
-    next('/login')
+  // Check if 'loggedIn' does not exist or is '0', and the current route is not '/login'
+  if (!loggedIn || loggedIn === '0') {
+    if (to.path !== '/login')
+      next('/login')
 
-  else
+    else
+      next()
+  }
+  else {
     next()
+  }
 })
 
 // Docs: https://router.vuejs.org/guide/advanced/navigation-guards.html#global-before-guards
