@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { VNodeRenderer } from '@layouts/components/VNodeRenderer'
 import { themeConfig } from '@themeConfig'
-import { emailValidator, passwordValidator, requiredValidator } from '@validators'
+import { emailValidator, requiredValidator } from '@validators'
 
 const route = useRouter()
 
@@ -45,7 +45,7 @@ const isPasswordVisible = ref(false)
 
         <VCardText class="text-center ">
           <h6 class="text-h4 text-primary mb-1">
-            Welcome
+            Welcome, Admin!
           </h6>
           <p class="mb-0">
             Sign in your account
@@ -73,7 +73,7 @@ const isPasswordVisible = ref(false)
                   label="Password"
                   :type="isPasswordVisible ? 'text' : 'password'"
                   :append-inner-icon="isPasswordVisible ? 'bx-hide' : 'bx-show'"
-                  :rules="[requiredValidator, passwordValidator]"
+                  :rules="[requiredValidator]"
                   @click:append-inner="isPasswordVisible = !isPasswordVisible"
                 />
 
