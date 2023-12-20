@@ -1,5 +1,7 @@
 <script setup lang="ts">
+import Swal from 'sweetalert2'
 import { VDataTable } from 'vuetify/labs/VDataTable'
+import axios from '@axios'
 
 const props = defineProps({
   search: String,
@@ -402,57 +404,89 @@ const isDialogVisible = ref(false)
 const selectedUser = ref()
 
 const headers = [
-  { title: 'USER', key: 'name' },
+  { title: 'USER', key: 'first_name' },
   { title: 'EMAIL', key: 'email' },
-  { title: 'PERMISSION', key: 'permission' },
+  { title: 'PERMISSION', key: 'permissions' },
   { title: 'ACTION', key: 'action' },
 ]
 
 const selectUser = (user: unknown) => {
   selectedUser.value = user
   isDialogVisible.value = true
+
+  // console.log(user)
 }
 
 const deleteUser = (id: number) => {
   tableContent.value = tableContent.value.filter(user => user.id !== id)
+}
+
+const users = ref()
+
+const getUsers = async () => {
+  const response = await axios.get('/users/get_users/')
+
+  users.value = response.data
+  users.value = users.value.filter(user => user.is_admin)
+}
+
+getUsers()
+
+const updateUser = async () => {
+  console.log(selectedUser.value.raw)
+  try {
+    const response = await axios.put(`/users/get_users/${selectedUser.value.raw.id}/`, selectedUser.value.raw)
+
+    Swal.fire({
+      title: 'Updated Succesfully',
+      timer: 1500,
+      timerProgressBar: true,
+      showConfirmButton: false,
+    })
+    isDialogVisible.value = false
+    console.log('User updated successfully:', response.data)
+  }
+  catch (error) {
+    console.error('Update error:', error)
+  }
 }
 </script>
 
 <template>
   <VDataTable
     :headers="headers"
-    :items="tableContent"
+    :items="users"
     :search="props.search"
     :items-per-page="10"
     show-select
   >
-    <template #item.permission="{ item }">
+    <template #item.permissions="{ item }">
       <span
-        v-for="(value, key) in item.props.title.permission"
+        v-for="(value, key) in item.props.title.permissions"
         :key="key"
       >
         <VIcon
-          v-if="key === 'administrator' && value === true"
+          v-if="key === 'is_administrator' && value === true"
           icon="bx-user"
           :class="key"
         />
         <VIcon
-          v-if="key === 'analytics' && value === true"
+          v-if="key === 'is_analytics' && value === true"
           icon="bx-stats"
           :class="key"
         />
         <VIcon
-          v-if="key === 'support' && value === true"
+          v-if="key === 'is_support' && value === true"
           icon="bx-headphone"
           :class="key"
         />
         <VIcon
-          v-if="key === 'product_managing' && value === true"
+          v-if="key === 'is_product_managing' && value === true"
           icon="bx-box"
           :class="key"
         />
         <VIcon
-          v-if="key === 'content_managing' && value === true"
+          v-if="key === 'is_content_managing' && value === true"
           icon="bx-edit"
           :class="key"
         />
@@ -480,16 +514,23 @@ const deleteUser = (id: number) => {
       <VCardText style="padding: 2rem;">
         <VForm>
           <VRow class="mb-3">
-            <VCol cols="12">
+            <VCol cols="6">
               <VTextField
-                v-model="selectedUser.raw.name"
-                label="Name"
+                v-model="selectedUser.raw.first_name"
+                label="First Name"
+              />
+            </VCol>
+            <VCol cols="6">
+              <VTextField
+                v-model="selectedUser.raw.last_name"
+                label="Last Name"
               />
             </VCol>
             <VCol cols="12">
               <VTextField
                 v-model="selectedUser.raw.email"
                 label="Email"
+                disabled
               />
             </VCol>
             <VCol cols="12">
@@ -511,7 +552,7 @@ const deleteUser = (id: number) => {
             >
               <VCheckboxBtn
                 id="administrator"
-                v-model="selectedUser.raw.permission.administrator"
+                v-model="selectedUser.raw.permissions.is_administrator"
               />
               <VLabel for="administrator">
                 Administrator
@@ -523,7 +564,7 @@ const deleteUser = (id: number) => {
             >
               <VCheckboxBtn
                 id="analytics"
-                v-model="selectedUser.raw.permission.analytics"
+                v-model="selectedUser.raw.permissions.is_analytics"
               />
               <VLabel for="analytics">
                 Analytics
@@ -535,7 +576,7 @@ const deleteUser = (id: number) => {
             >
               <VCheckboxBtn
                 id="content_managing"
-                v-model="selectedUser.raw.permission.content_managing"
+                v-model="selectedUser.raw.permissions.is_content_managing"
               />
               <VLabel for="content_managing">
                 Content Managing
@@ -547,7 +588,7 @@ const deleteUser = (id: number) => {
             >
               <VCheckboxBtn
                 id="product_managing"
-                v-model="selectedUser.raw.permission.product_managing"
+                v-model="selectedUser.raw.permissions.is_product_managing"
               />
               <VLabel for="product_managing">
                 Product Managing
@@ -559,7 +600,7 @@ const deleteUser = (id: number) => {
             >
               <VCheckboxBtn
                 id="support"
-                v-model="selectedUser.raw.permission.support"
+                v-model="selectedUser.raw.permissions.is_support"
               />
               <VLabel for="support">
                 Support
@@ -587,7 +628,7 @@ const deleteUser = (id: number) => {
               >
                 Back
               </VBtn>
-              <VBtn>
+              <VBtn @click="updateUser">
                 Save Changes
               </VBtn>
             </div>
@@ -599,7 +640,7 @@ const deleteUser = (id: number) => {
 </template>
 
 <style lang="scss">
-.administrator{
+.is_administrator{
   padding: .3rem;
   border-radius: 1rem;
   aspect-ratio: 1/1;
@@ -608,7 +649,7 @@ const deleteUser = (id: number) => {
   margin-inline: .3rem;
 }
 
-.analytics{
+.is_analytics{
   padding: .3rem;
   border-radius: 1rem;
   aspect-ratio: 1/1;
@@ -617,7 +658,7 @@ const deleteUser = (id: number) => {
   margin-inline: .3rem;
 }
 
-.content_managing{
+.is_content_managing{
   padding: .3rem;
   border-radius: 1rem;
   aspect-ratio: 1/1;
@@ -626,7 +667,7 @@ const deleteUser = (id: number) => {
   margin-inline: .3rem;
 }
 
-.product_managing{
+.is_product_managing{
   padding: .3rem;
   border-radius: 1rem;
   aspect-ratio: 1/1;
@@ -635,7 +676,7 @@ const deleteUser = (id: number) => {
   margin-inline: .3rem;
 }
 
-.support{
+.is_support{
   padding: .3rem;
   border-radius: 1rem;
   aspect-ratio: 1/1;
