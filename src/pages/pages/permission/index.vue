@@ -36,7 +36,8 @@ const tabs = [
           </VCol>
           <VCol
             cols="12"
-            md="4"
+            md="5"
+            class="d-flex gap-x-2"
           >
             <VTextField
               v-model="search"
