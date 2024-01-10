@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import Swal from 'sweetalert2'
 import axios from '@axios'
 
 const stones = ref([
@@ -528,6 +529,14 @@ const stones = ref([
 ])
 
 // const stones = ref()
+const addStone = ref({
+  name: '',
+  image: '',
+  status: '',
+  isInStock: '',
+  colors: [],
+})
+
 // const stone = ref()
 const selectedStone = ref()
 const selectedStoneVariant = ref()
@@ -552,7 +561,19 @@ const getProducts = async () => {
   stones.value = response.data
 }
 
-getProducts()
+const applyChanges = () => {
+  isEditStoneVariantDialogOpen.value = false
+  isAddStoneCategoryDialogOpen.value = false
+  isEditCategoryDialogOpen.value = false
+  Swal.fire({
+    title: 'Changes Applied',
+    timer: 1500,
+    timerProgressBar: true,
+    showConfirmButton: false,
+  })
+}
+
+// getProducts()
 </script>
 
 <template>
@@ -581,18 +602,19 @@ getProducts()
             :style="{ 'inline-size': '100%', 'max-inline-size': '30rem', 'opacity': stone.status ? '100%' : '70%', 'min-inline-size': '20rem' }"
           >
             <VCard>
-              <!--
-                <VImg
-                :src="`data:image/jpeg;base64,${stone.image}`"
-                height="200"
-                cover
-                />
-              -->
               <VImg
                 :src="stone.image"
                 height="200"
                 cover
               />
+
+              <!--
+                <VImg
+                :src="stone.image"
+                height="200"
+                cover
+                />
+              -->
 
               <VCardItem>
                 <VCardTitle>{{ stone.name }}</VCardTitle>
@@ -631,7 +653,6 @@ getProducts()
         <VCardText>
           <VRow>
             <VCol cols="6">
-              <!-- <VImg :src="`data:image/jpeg;base64,${selectedStone.image}`" /> -->
               <VImg :src="selectedStone.image" />
             </VCol>
             <VCol>
@@ -686,16 +707,6 @@ getProducts()
                 <VCheckbox v-model="stoneVariant.show" />
                 <div class="d-flex align-center gap-x-1">
                   <div>
-                    <!--
-                      <VImg
-                      :width="50"
-                      :height="30"
-                      aspect-ratio="16/9"
-                      cover
-                      :src="`data:image/jpeg;base64,${stoneVariant.image}`"
-                      style="border-radius: 5px;"
-                      />
-                    -->
                     <VImg
                       :width="50"
                       :height="30"
@@ -704,6 +715,17 @@ getProducts()
                       :src="stoneVariant.image"
                       style="border-radius: 5px;"
                     />
+
+                    <!--
+                      <VImg
+                      :width="50"
+                      :height="30"
+                      aspect-ratio="16/9"
+                      cover
+                      :src="stoneVariant.image"
+                      style="border-radius: 5px;"
+                      />
+                    -->
                   </div>
                   {{ stoneVariant.name }}
                   <VBtn
@@ -725,7 +747,7 @@ getProducts()
               >
                 Cancel
               </VBtn>
-              <VBtn>
+              <VBtn @click="applyChanges">
                 Apply Changes
               </VBtn>
             </VCol>
@@ -743,15 +765,6 @@ getProducts()
         <VCardText>
           <VRow>
             <VCol>
-              <!--
-                <VImg
-                :height="150"
-                aspect-ratio="16/9"
-                cover
-                :src="`data:image/jpeg;base64,${selectedStoneVariant.image}`"
-                style="border-radius: 5px;"
-                />
-              -->
               <VImg
                 :height="150"
                 aspect-ratio="16/9"
@@ -759,6 +772,16 @@ getProducts()
                 :src="selectedStoneVariant.image"
                 style="border-radius: 5px;"
               />
+
+              <!--
+                <VImg
+                :height="150"
+                aspect-ratio="16/9"
+                cover
+                :src="selectedStoneVariant.image"
+                style="border-radius: 5px;"
+                />
+              -->
             </VCol>
             <VCol class="d-flex align-center">
               <VTextField
@@ -785,33 +808,61 @@ getProducts()
       </VCard>
     </VDialog>
 
+    <!-- Add Stone Variant Dialog -->
     <VDialog
       v-model="isAddStoneCategoryDialogOpen"
       width="600"
     >
       <VCard>
-        <VCardText>
+        <VCardText class="d-flex gap-y-3 flex-column">
           <VRow>
             <VCol>
-              <VTextField label="Stone Category" />
-              <VRadioGroup inline>
+              <VImg src="https://static.wixstatic.com/media/4e4244_39556b894d394f9db0dd25dea400f041~mv2.jpg/v1/fill/w_640,h_400,al_c,q_80,usm_0.66_1.00_0.01,enc_auto/4e4244_39556b894d394f9db0dd25dea400f041~mv2.jpg" />
+            </VCol>
+            <VCol>
+              <VTextField
+                v-model="addStone.name"
+                label="Stone Category"
+              />
+              <VRadioGroup
+                v-model="addStone.status"
+                inline
+              >
                 <VRadio
                   label="In Stock"
                   :value="1"
                 />
                 <VRadio
                   label="Out of Stock"
-                  :value="1"
+                  :value="0"
                 />
               </VRadioGroup>
             </VCol>
           </VRow>
           <VDivider />
           <VRow>
-            <VCol>
-              <h6 class="text-h6">
-                Stone Colors
-              </h6>
+            <VCol class="d-flex flex-column">
+              <div class="d-flex flex-row">
+                <h6 class="text-h6">
+                  Stone Colors
+                </h6>
+                <VSpacer />
+                <VBtn
+                  color="primary"
+                  variant="text"
+                >
+                  <VIcon
+                    start
+                    icon="mdi-plus"
+                  />
+                  Add
+                </VBtn>
+              </div>
+              <div>
+                <p class="text-body-2 text-disabled">
+                  Stone Color List
+                </p>
+              </div>
             </VCol>
           </VRow>
         </VCardText>
