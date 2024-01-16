@@ -99,14 +99,6 @@ const isPasswordVisible = ref(false)
         </VCardText>
       </VCard>
     </div>
-    <VSnackbar
-      v-model="invalidCredentialsError"
-      location="top end"
-      variant="flat"
-      color="error"
-    >
-      Invalid Credentials
-    </VSnackbar>
   </div>
 </template>
 

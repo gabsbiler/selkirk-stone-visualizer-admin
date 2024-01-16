@@ -630,14 +630,16 @@ async function registerUser() {
                   disabled
                 />
               </VCol>
-              <VCol cols="12">
+              <!--
+                <VCol cols="12">
                 <VFileInput
-                  label="Avatar Upload"
-                  accept="image/png, image/jpeg, image/bmp"
-                  placeholder="Pick an avatar"
-                  prepend-icon="bx-camera"
+                label="Avatar Upload"
+                accept="image/png, image/jpeg, image/bmp"
+                placeholder="Pick an avatar"
+                prepend-icon="bx-camera"
                 />
-              </VCol>
+                </VCol>
+              -->
             </VRow>
             <span class="text-h6">
               Permission
