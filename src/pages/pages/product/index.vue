@@ -1,5 +1,6 @@
 <script setup lang="ts">
-import Swal from 'sweetalert2'
+import Category from '@/layouts/components/category/Category.vue'
+import CategoryAddDialog from '@/layouts/components/category/CategoryAddDialog.vue'
 import axios from '@axios'
 
 // const stones = ref([
@@ -528,50 +529,17 @@ import axios from '@axios'
 
 // ])
 
-const stones = ref()
+const stones = ref([])
+const categoryRef = ref(null)
 
-const addStone = ref({
-  name: '',
-  image: '',
-  status: '',
-  isInStock: '',
-  colors: [],
-})
-
-// const stone = ref()
-const selectedStone = ref()
-const selectedStoneVariant = ref()
-const isEditCategoryDialogOpen = ref(false)
-const isAddStoneCategoryDialogOpen = ref(false)
-
-const isEditStoneVariantDialogOpen = ref(false)
-
-const editStone = (stoneSelected: any) => {
-  selectedStone.value = stoneSelected
-  isEditCategoryDialogOpen.value = true
-}
-
-const editVariant = (variant: any) => {
-  selectedStoneVariant.value = variant
-  isEditStoneVariantDialogOpen.value = true
+const editStone = (stone: any) => {
+  categoryRef.value.openDialog(true, stone)
 }
 
 const getProducts = async () => {
   const response = await axios.get('/products/')
 
   stones.value = response.data
-}
-
-const applyChanges = () => {
-  isEditStoneVariantDialogOpen.value = false
-  isAddStoneCategoryDialogOpen.value = false
-  isEditCategoryDialogOpen.value = false
-  Swal.fire({
-    title: 'Changes Applied',
-    timer: 1500,
-    timerProgressBar: true,
-    showConfirmButton: false,
-  })
 }
 
 onMounted(() => {
@@ -589,16 +557,17 @@ onMounted(() => {
               Stone Category
             </h3>
           </VCol>
+
           <VCol class="d-flex gap-x-2 justify-end">
-            <VBtn>Show</VBtn>
-            <VBtn>Hide</VBtn>
-            <VBtn>Delete</VBtn>
-            <VBtn @click="isAddStoneCategoryDialogOpen = true">
-              Add
+            <!-- <VBtn>Show</VBtn> -->
+            <!-- <VBtn>Hide</VBtn> -->
+            <!-- <VBtn>Delete</VBtn> -->
+            <VBtn>
+              Add Category
             </VBtn>
           </VCol>
         </VRow>
-        <VRow>
+        <VRow v-if="stones.length > 0">
           <VCol
             v-for="stone in stones"
             :key="stone.name"
@@ -610,14 +579,6 @@ onMounted(() => {
                 height="200"
                 cover
               />
-
-              <!--
-                <VImg
-                :src="stone.image"
-                height="200"
-                cover
-                />
-              -->
 
               <VCardItem>
                 <VCardTitle>{{ stone.name }}</VCardTitle>
@@ -644,232 +605,39 @@ onMounted(() => {
             </VCard>
           </VCol>
         </VRow>
+        <VRow v-else>
+          <VCol
+            v-for="item in 3"
+            :key="item"
+            :style="{ 'inline-size': '100%', 'max-inline-size': '30rem', 'min-inline-size': '20rem' }"
+          >
+            <VCard>
+              <PuSkeleton height="200px" />
+              <VCardItem>
+                <PuSkeleton height="25px" />
+              </VCardItem>
+
+              <VCardText>
+                <div class="d-flex justify-space-between">
+                  <PuSkeleton
+                    height="40px"
+                    width="90px"
+                  />
+                  <PuSkeleton
+                    height="40px"
+                    width="50px"
+                  />
+                </div>
+              </VCardText>
+            </VCard>
+          </VCol>
+        </VRow>
       </VCardText>
     </VCard>
 
     <!-- Category Dialog -->
-    <VDialog
-      v-model="isEditCategoryDialogOpen"
-      width="700"
-    >
-      <VCard>
-        <VCardText>
-          <VRow>
-            <VCol cols="6">
-              <VImg :src="selectedStone.image" />
-            </VCol>
-            <VCol>
-              <VTextField
-                v-model="selectedStone.name"
-                label="Label"
-              />
-              <VRadioGroup
-                v-model="selectedStone.isInStock"
-                inline
-              >
-                <VRadio
-                  label="In Stock"
-                  :value="true"
-                />
-                <VRadio
-                  label="Out of Stock"
-                  :value="false"
-                />
-              </VRadioGroup>
-            </VCol>
-          </VRow>
-          <VDivider class="my-3" />
-          <VRow>
-            <VCol class="d-flex align-center">
-              <h6 class="text-h6">
-                Available Stone Color
-              </h6>
-              <VSpacer />
-              <VBtn
-                color="primary"
-                variant="text"
-              >
-                <VIcon
-                  start
-                  icon="mdi-plus"
-                />
-                Add
-              </VBtn>
-            </VCol>
-          </VRow>
-          <VRow>
-            <VCol
-              v-for="stoneVariant in selectedStone.colors"
-              :key="stoneVariant.name"
-              cols="12"
+    <Category ref="categoryRef" />
 
-              md="6"
-              sm="4"
-            >
-              <div class="d-flex align-center">
-                <VCheckbox v-model="stoneVariant.show" />
-                <div class="d-flex align-center gap-x-1">
-                  <div>
-                    <VImg
-                      :width="50"
-                      :height="30"
-                      aspect-ratio="16/9"
-                      cover
-                      :src="stoneVariant.image"
-                      style="border-radius: 5px;"
-                    />
-
-                    <!--
-                      <VImg
-                      :width="50"
-                      :height="30"
-                      aspect-ratio="16/9"
-                      cover
-                      :src="stoneVariant.image"
-                      style="border-radius: 5px;"
-                      />
-                    -->
-                  </div>
-                  {{ stoneVariant.name }}
-                  <VBtn
-                    icon="mdi-note-edit-outline"
-                    variant="text"
-                    size="x-small"
-                    @click="editVariant(stoneVariant)"
-                  />
-                </div>
-              </div>
-            </VCol>
-          </VRow>
-          <VRow>
-            <VCol class="d-flex gap-x-2">
-              <VSpacer />
-              <VBtn
-                variant="outlined"
-                @click="isEditCategoryDialogOpen = false"
-              >
-                Cancel
-              </VBtn>
-              <VBtn @click="applyChanges">
-                Apply Changes
-              </VBtn>
-            </VCol>
-          </VRow>
-        </VCardText>
-      </VCard>
-    </VDialog>
-
-    <!-- Edit Stone Variant Dialog -->
-    <VDialog
-      v-model="isEditStoneVariantDialogOpen"
-      class="v-dialog-sm"
-    >
-      <VCard title="Edit Stone Color">
-        <VCardText>
-          <VRow>
-            <VCol>
-              <VImg
-                :height="150"
-                aspect-ratio="16/9"
-                cover
-                :src="selectedStoneVariant.image"
-                style="border-radius: 5px;"
-              />
-
-              <!--
-                <VImg
-                :height="150"
-                aspect-ratio="16/9"
-                cover
-                :src="selectedStoneVariant.image"
-                style="border-radius: 5px;"
-                />
-              -->
-            </VCol>
-            <VCol class="d-flex align-center">
-              <VTextField
-                v-model="selectedStoneVariant.name"
-                label="Stone Color Name"
-              />
-            </VCol>
-          </VRow>
-          <VRow>
-            <VCol class="d-flex gap-x-2">
-              <VSpacer />
-              <VBtn
-                variant="outlined"
-                @click="isEditStoneVariantDialogOpen = false"
-              >
-                Cancel
-              </VBtn>
-              <VBtn>
-                Save
-              </VBtn>
-            </VCol>
-          </VRow>
-        </VCardText>
-      </VCard>
-    </VDialog>
-
-    <!-- Add Stone Variant Dialog -->
-    <VDialog
-      v-model="isAddStoneCategoryDialogOpen"
-      width="600"
-    >
-      <VCard>
-        <VCardText class="d-flex gap-y-3 flex-column">
-          <VRow>
-            <VCol>
-              <VImg src="https://static.wixstatic.com/media/4e4244_39556b894d394f9db0dd25dea400f041~mv2.jpg/v1/fill/w_640,h_400,al_c,q_80,usm_0.66_1.00_0.01,enc_auto/4e4244_39556b894d394f9db0dd25dea400f041~mv2.jpg" />
-            </VCol>
-            <VCol>
-              <VTextField
-                v-model="addStone.name"
-                label="Stone Category"
-              />
-              <VRadioGroup
-                v-model="addStone.status"
-                inline
-              >
-                <VRadio
-                  label="In Stock"
-                  :value="1"
-                />
-                <VRadio
-                  label="Out of Stock"
-                  :value="0"
-                />
-              </VRadioGroup>
-            </VCol>
-          </VRow>
-          <VDivider />
-          <VRow>
-            <VCol class="d-flex flex-column">
-              <div class="d-flex flex-row">
-                <h6 class="text-h6">
-                  Stone Colors
-                </h6>
-                <VSpacer />
-                <VBtn
-                  color="primary"
-                  variant="text"
-                >
-                  <VIcon
-                    start
-                    icon="mdi-plus"
-                  />
-                  Add
-                </VBtn>
-              </div>
-              <div>
-                <p class="text-body-2 text-disabled">
-                  Stone Color List
-                </p>
-              </div>
-            </VCol>
-          </VRow>
-        </VCardText>
-      </VCard>
-    </VDialog>
+    <CategoryAddDialog />
   </section>
 </template>
