@@ -1,34 +1,82 @@
 <script setup lang="ts">
+import { useTheme } from 'vuetify'
+import { getLineChartConfig } from '@core/libs/chartjs/chartjsConfig'
+import LineChart from '@core/libs/chartjs/components/LineChart'
+
 const filterTab = ref('week')
+
+const vuetifyTheme = useTheme()
+
+const data = {
+  labels: ['Week 1', 'Week 2', 'Week 3', 'Week 4'],
+  datasets: [
+    {
+      fill: false,
+      label: false,
+      tension: 0.5,
+      pointRadius: 1,
+      pointHoverRadius: 5,
+      pointStyle: 'circle',
+      borderColor: 'green',
+      backgroundColor: 'green',
+      pointHoverBorderWidth: 1,
+      pointHoverBorderColor: 'white',
+      pointBorderColor: 'transparent',
+      pointHoverBackgroundColor: 'green',
+      data: [80, 150, 350, 200],
+    },
+
+  ],
+}
+
+const chartConfig = computed(() => getLineChartConfig(vuetifyTheme.current.value))
+
+const tabs = [
+  { title: 'Month' },
+  { title: 'Week' },
+  { title: 'Day' },
+]
 </script>
 
 <template>
-  <VCard>
+  <VCard height="400">
     <VCardText>
       <VTabs
         v-model="filterTab"
         color="primary"
-        align-tabs="center"
+        align-tabs="right"
+        class="v-tabs-pill"
       >
-        <VTab value="month">
-          Month
-        </VTab>
-        <VTab value="week">
-          Week
-        </VTab>
-        <VTab value="day">
-          Day
+        <VTab
+          v-for="tab in tabs"
+          :key="tab.title"
+        >
+          {{ tab.title }}
         </VTab>
       </VTabs>
       <VWindow v-model="filterTab">
+        <!-- Month -->
         <VWindowItem key="month">
-          month
+          <LineChart
+            :chart-options="chartConfig"
+            :height="700"
+            :chart-data="data"
+          />
         </VWindowItem>
+
         <VWindowItem key="week">
-          week
+          <LineChart
+            :chart-options="chartConfig"
+            :height="700"
+            :chart-data="data"
+          />
         </VWindowItem>
         <VWindowItem key="day">
-          day
+          <LineChart
+            :chart-options="chartConfig"
+            :height="700"
+            :chart-data="data"
+          />
         </VWindowItem>
       </VWindow>
     </VCardText>

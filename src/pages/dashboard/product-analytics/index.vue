@@ -1,7 +1,11 @@
+<script setup lang="ts">
+import CollectedStoneVariant from '@/layouts/components/dashboard/productAnalysis/CollectedStoneVariant.vue'
+import PopularStoneVariant from '@/layouts/components/dashboard/productAnalysis/PopularStoneVariant.vue'
+</script>
+
 <template>
-  <section>
-    <h1 class="text-5">
-      DASHBOARD>PRODUCT ANALYTICS
-    </h1>
+  <section class="d-flex flex-column gap-y-7">
+    <PopularStoneVariant />
+    <CollectedStoneVariant />
   </section>
 </template>
