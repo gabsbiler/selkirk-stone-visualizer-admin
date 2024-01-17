@@ -531,9 +531,14 @@ import axios from '@axios'
 
 const stones = ref([])
 const categoryRef = ref(null)
+const addDialogRef = ref(null)
 
 const editStone = (stone: any) => {
   categoryRef.value.openDialog(true, stone)
+}
+
+const addStone = () => {
+  addDialogRef.value.openDialog()
 }
 
 const getProducts = async () => {
@@ -562,7 +567,7 @@ onMounted(() => {
             <!-- <VBtn>Show</VBtn> -->
             <!-- <VBtn>Hide</VBtn> -->
             <!-- <VBtn>Delete</VBtn> -->
-            <VBtn>
+            <VBtn @click="addStone">
               Add Category
             </VBtn>
           </VCol>
@@ -596,10 +601,12 @@ onMounted(() => {
                     Edit
                   </VBtn>
                   <VSpacer />
-                  <VBtn
+                  <!--
+                    <VBtn
                     icon="mdi-trash-can-outline"
                     variant="text"
-                  />
+                    />
+                  -->
                 </div>
               </VCardText>
             </VCard>
@@ -638,6 +645,6 @@ onMounted(() => {
     <!-- Category Dialog -->
     <Category ref="categoryRef" />
 
-    <CategoryAddDialog />
+    <CategoryAddDialog ref="addDialogRef" />
   </section>
 </template>

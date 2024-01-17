@@ -1,12 +1,15 @@
 <script setup lang="ts">
+import SnackBar from '../SnackBar.vue'
 import CategoryColors from '@/layouts/components/category/CategoryColors.vue'
 import CategoryColorVariantAddDialog from '@/layouts/components/category/CategoryColorVariantAdd.vue'
+import axios from '@axios'
 
 const selectedStone = ref()
 const isDialogOpen = ref(false)
 const CategoryVariantAddRef = ref(null)
 const deleteLoader = ref(false)
 const applyLoader = ref(false)
+const snackbarRef = ref(null)
 
 const openDialog = (status: boolean, stone: any) => {
   isDialogOpen.value = status
@@ -20,12 +23,27 @@ const openVariantAddDialog = () => {
   CategoryVariantAddRef.value.openAddDialog()
 }
 
-const deleteCategory = () => {
+const deleteCategory = async () => {
   deleteLoader.value = true
-  setTimeout(() => {
-    console.log('delete category')
+  try {
+    const response = await axios.delete(`/products/${sessionStorage.getItem('stoneID')}/`)
+
+    snackbarRef.value.show('success', response.data)
+    console.log(response)
     deleteLoader.value = false
-  }, 3000)
+    setTimeout(() => {
+      window.location.reload()
+    }, 1000)
+  }
+  catch (error) {
+    console.error('Error adding product:', error)
+
+    snackbarRef.value.show('error', `Error adding product: ${error.message}`)
+    deleteLoader.value = false
+    setTimeout(() => {
+      window.location.reload()
+    }, 1000)
+  }
 }
 
 const applyChanges = () => {
@@ -130,5 +148,6 @@ const applyChanges = () => {
       </VCardText>
     </VCard>
     <CategoryColorVariantAddDialog ref="CategoryVariantAddRef" />
+    <SnackBar ref="snackbarRef" />
   </VDialog>
 </template>

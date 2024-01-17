@@ -2,7 +2,7 @@
 import SnackBar from '../SnackBar.vue'
 import axios from '@axios'
 
-const isDialogOpen = ref(true)
+const isDialogOpen = ref(false)
 const addLoader = ref(false)
 const snackbarRef = ref()
 
@@ -17,6 +17,12 @@ const variantColor = ref({
   variantName: null,
   variantImage: null,
 })
+
+const openDialog = () => {
+  isDialogOpen.value = !isDialogOpen.value
+}
+
+defineExpose({ openDialog })
 
 const convertToBase64 = file => {
   return new Promise((resolve, reject) => {
@@ -64,10 +70,13 @@ const submit = async () => {
     console.log('Product added:', response.data)
     snackbarRef.value.show('success', response.data)
     addLoader.value = false
+    setTimeout(() => {
+      window.location.reload()
+    }, 1000)
   }
   catch (error) {
     console.error('Error adding product:', error)
-    snackbarRef.value.show('error', `Error adding product: ${error.message}`)
+    snackbarRef.value.show('error', `Error adding product: ${error.response.data}`)
     addLoader.value = false
   }
 }

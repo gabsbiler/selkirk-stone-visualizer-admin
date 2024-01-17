@@ -1,7 +1,17 @@
+<script setup lang="ts">
+import UserAnalyticsCards from '@/layouts/components/dashboard/userAnalytics/UserAnalyticsCards.vue'
+import UsersNewVisitor from '@/layouts/components/dashboard/userAnalytics/usersNewVisitor.vue'
+</script>
+
 <template>
   <section>
-    <h1 class="text-5">
-      DASHBOARD>USER ANALYTICS
-    </h1>
+    <VRow>
+      <VCol cols="12">
+        <UsersNewVisitor />
+      </VCol>
+      <VCol cols="12">
+        <UserAnalyticsCards />
+      </VCol>
+    </VRow>
   </section>
 </template>

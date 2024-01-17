@@ -1,0 +1,1 @@
+import{_ as o}from"./CategoryColorVariantEdit.vue_vue_type_script_setup_true_lang-7793099a.js";import"./SnackBar.vue_vue_type_script_setup_true_lang-12957a92.js";import"./VSnackbar-7b62397d.js";import"./index-0d4070de.js";import"./axios-5c1a43ed.js";import"./VSpacer-e5b4c91c.js";import"./VDialog-bcfbdd42.js";export{o as default};

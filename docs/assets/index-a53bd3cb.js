@@ -1,0 +1,1 @@
+import{_ as o}from"./CollectedStoneVariant.vue_vue_type_script_setup_true_lang-42fad49f.js";import{_ as s}from"./PopularStoneVariant.vue_vue_type_script_setup_true_lang-a96feee3.js";import{d as a,o as t,c,p as e}from"./index-0d4070de.js";const n={class:"d-flex flex-column gap-y-7"},l=a({__name:"index",setup(_){return(r,m)=>(t(),c("section",n,[e(s),e(o)]))}});export{l as default};
