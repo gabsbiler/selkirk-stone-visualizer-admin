@@ -3,7 +3,7 @@ import axios from 'axios'
 const axiosIns = axios.create({
   // You can add your headers here
   // ================================
-  baseURL: 'https://selkirkistonesapi.azurewebsites.net/api',
+  baseURL: 'https://selkirkappapi.azurewebsites.net/api/',
 
   // timeout: 1000,
   // headers: {'X-Custom-Header': 'foobar'}

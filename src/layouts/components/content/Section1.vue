@@ -15,9 +15,9 @@ const snackbarRef = ref(null)
 const loading = ref(false)
 
 const fetchData = async () => {
-  const response = await axios.get('/contents/section1/2')
+  const response = await axios.get('/contents/section1/')
 
-  data.value = response.data
+  data.value = response.data[0]
 }
 
 const sendData = async () => {
@@ -30,7 +30,7 @@ const sendData = async () => {
   formData.append('body', data.value.body)
 
   try {
-    const res = await axios.patch('/contents/section1/2/', formData, {
+    const res = await axios.patch(`/contents/section1/${data.value.id}/`, formData, {
       headers: {
         'Content-Type': 'multipart/form-data',
       },

@@ -20,9 +20,9 @@ const snackbarRef = ref(null)
 const loading = ref(false)
 
 const fetchData = async () => {
-  const response = await axios.get('/contents/section2/2/')
+  const response = await axios.get('/contents/section2/')
 
-  data.value = response.data
+  data.value = response.data[0]
 }
 
 const sendData = async () => {

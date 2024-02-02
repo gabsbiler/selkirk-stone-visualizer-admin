@@ -38,7 +38,7 @@ const sendData = async () => {
     formData.append('banner', bannerFile.value[0])
 
   try {
-    const res = await axios.patch('/contents/signup_page/8/', formData, {
+    const res = await axios.patch(`/contents/signup_page/${data.value.id}/`, formData, {
       headers: {
         'Content-Type': 'multipart/form-data',
       },
