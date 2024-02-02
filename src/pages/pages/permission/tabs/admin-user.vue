@@ -84,7 +84,7 @@ getUsers()
 const updateUser = async () => {
   console.log(selectedUser.value.raw)
   try {
-    const response = await axios.put(`/users/get_users/${selectedUser.value.raw.id}/`, selectedUser.value.raw)
+    const response = await axios.patch(`/users/get_users/${selectedUser.value.raw.id}/`, selectedUser.value.raw)
 
     Swal.fire({
       title: 'Updated Succesfully',
