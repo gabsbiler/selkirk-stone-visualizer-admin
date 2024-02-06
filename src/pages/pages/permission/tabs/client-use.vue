@@ -45,7 +45,18 @@ const deleteUsers = async (id: number) => {
 
 const resendVerificationEmail = async (id: number) => {
   try {
-    const response = await axios.post(`/users/send-verification_email/${id}/`)
+    const response = await axios.post(`/users/send-verification-email/${id}/`)
+
+    console.log(response.data)
+  }
+  catch (error) {
+    console.error('Reverification Failed: ', error)
+  }
+}
+
+const sendResetPassword = async (id: number) => {
+  try {
+    const response = await axios.post(`/users/reset-password/${id}/`)
 
     console.log(response.data)
   }
@@ -68,6 +79,17 @@ onMounted(() => {
   >
     <template #item.action="{ item }">
       <div>
+        <VTooltip text="Send Reset Password">
+          <template #activator="{ props }">
+            <VBtn
+              v-bind="props"
+              icon="mdi-lock-reset"
+              density="compact"
+              variant="text"
+              @click="sendResetPassword(item.raw.id)"
+            />
+          </template>
+        </VTooltip>
         <VTooltip text="Email Verification">
           <template #activator="{ props }">
             <VBtn
@@ -79,6 +101,7 @@ onMounted(() => {
             />
           </template>
         </VTooltip>
+
         <VTooltip text="Delete User">
           <template #activator="{ props }">
             <VBtn
