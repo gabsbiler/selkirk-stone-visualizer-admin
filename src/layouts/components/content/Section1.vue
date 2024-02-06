@@ -8,7 +8,10 @@ const data = ref({
   body: '',
   heading_1: '',
   heading_2: '',
+  is_hidden: false,
 })
+
+const bannerFile = ref()
 
 const snackbarRef = ref(null)
 
@@ -28,6 +31,10 @@ const sendData = async () => {
   formData.append('heading_1', data.value.heading_1)
   formData.append('heading_2', data.value.heading_2)
   formData.append('body', data.value.body)
+  formData.append('is_hidden', data.value.is_hidden ? '1' : '0')
+
+  if (bannerFile.value)
+    formData.append('banner', bannerFile.value[0])
 
   try {
     const res = await axios.patch(`/contents/section1/${data.value.id}/`, formData, {
@@ -66,7 +73,10 @@ onMounted(() => {
           <h6 class="text-h6 text-primary mb-3">
             Landing Page (Section 1)
           </h6>
-          <VCheckbox label="Show Section" />
+          <VCheckbox
+            v-model="data.is_hidden"
+            label="Show Section"
+          />
         </div>
         <VForm>
           <VRow>
@@ -80,6 +90,13 @@ onMounted(() => {
               <VTextField
                 v-model="data.heading_2"
                 label="Heading 2"
+              />
+            </VCol>
+            <VCol cols="12">
+              <VFileInput
+                v-model="bannerFile"
+                label="Banner Photo 1"
+                accept="image/*"
               />
             </VCol>
             <VCol cols="12">

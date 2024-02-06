@@ -48,7 +48,7 @@ const sendData = async () => {
     formData.append('banner_6', banner_6.value[0])
 
   try {
-    const res = await axios.patch('/contents/section3/2/', formData, {
+    const res = await axios.patch(`/contents/section3/${data.value.id}/`, formData, {
       headers: {
         'Content-Type': 'multipart/form-data',
       },
@@ -63,6 +63,7 @@ const sendData = async () => {
   catch (error) {
     if (snackbarRef.value)
       snackbarRef.value.show('error', 'Please contact your administrator.')
+    console.log(error)
   }
 }
 

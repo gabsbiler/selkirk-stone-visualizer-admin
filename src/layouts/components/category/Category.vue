@@ -41,7 +41,7 @@ const deleteCategory = async () => {
     snackbarRef.value.show('error', `Error adding product: ${error.message}`)
     deleteLoader.value = false
     setTimeout(() => {
-      window.location.reload()
+      // window.location.reload()
     }, 1000)
   }
 }

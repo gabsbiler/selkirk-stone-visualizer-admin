@@ -51,7 +51,7 @@ const addVariant = async () => {
 
     const response = await axios.patch(url, payload)
 
-    snackbarRef.value.show('success', response.data)
+    snackbarRef.value.show('success', 'Added Succesfully')
     addLoader.value = false
     setTimeout(() => {
       window.location.reload()
@@ -70,7 +70,7 @@ const addVariant = async () => {
     v-model="isDialogOpen"
     class="v-dialog-sm"
   >
-    <VCard title="Edit Stone Color">
+    <VCard title="Add Stone Color">
       <VCardText>
         <VRow>
           <VCol>
@@ -97,6 +97,7 @@ const addVariant = async () => {
             </VBtn>
             <VBtn
               :loading="addLoader"
+              variant="outlined"
               @click="addVariant"
             >
               Add

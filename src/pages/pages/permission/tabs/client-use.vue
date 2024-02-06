@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import { VDataTable } from 'vuetify/labs/VDataTable'
-import MoreBtn from '@/@core/components/MoreBtn.vue'
 import axios from '@axios'
 
 const props = defineProps({
@@ -20,7 +19,7 @@ const headers = [
 
 const getUsers = async () => {
   try {
-    const response = await axios.get('/users/get_users/')
+    const response = await axios.get('/users/get-users/')
 
     users.value = response.data
     users.value = users.value.filter(user => !user.is_admin)
@@ -32,7 +31,32 @@ const getUsers = async () => {
   }
 }
 
-getUsers()
+const deleteUsers = async (id: number) => {
+  try {
+    const response = await axios.delete(`/users/get-users/${id}/`)
+
+    console.log(response.data)
+    getUsers()
+  }
+  catch (error) {
+    console.error('Delete Error: ', error)
+  }
+}
+
+const resendVerificationEmail = async (id: number) => {
+  try {
+    const response = await axios.post(`/users/send-verification_email/${id}/`)
+
+    console.log(response.data)
+  }
+  catch (error) {
+    console.error('Reverification Failed: ', error)
+  }
+}
+
+onMounted(() => {
+  getUsers()
+})
 </script>
 
 <template>
@@ -43,12 +67,30 @@ getUsers()
     :search="props.search"
   >
     <template #item.action="{ item }">
-      <MoreBtn
-        :menu-list="[
-          'Send a Reset Password Email',
-          'Delete',
-        ]"
-      />
+      <div>
+        <VTooltip text="Email Verification">
+          <template #activator="{ props }">
+            <VBtn
+              v-bind="props"
+              icon="mdi-email"
+              density="compact"
+              variant="text"
+              @click="resendVerificationEmail(item.raw.id)"
+            />
+          </template>
+        </VTooltip>
+        <VTooltip text="Delete User">
+          <template #activator="{ props }">
+            <VBtn
+              v-bind="props"
+              icon="mdi-trash"
+              density="compact"
+              variant="text"
+              @click="deleteUsers(item.raw.id)"
+            />
+          </template>
+        </VTooltip>
+      </div>
     </template>
   </VDataTable>
 </template>

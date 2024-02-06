@@ -17,7 +17,7 @@ const snackbarRef = ref(null)
 const loading = ref(false)
 
 const fetchData = async () => {
-  const response = await axios.get('/contents/login_page/')
+  const response = await axios.get('/contents/login-page/')
 
   data.value = response.data[0]
 }
@@ -38,7 +38,7 @@ const sendData = async () => {
     formData.append('banner', bannerFile.value[0])
 
   try {
-    const res = await axios.patch(`/contents/login_page/${data.value.id}/`, formData, {
+    const res = await axios.patch(`/contents/login-page/${data.value.id}/`, formData, {
       headers: {
         'Content-Type': 'multipart/form-data',
       },

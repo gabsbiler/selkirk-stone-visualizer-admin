@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import FooterSection from '@/layouts/components/content/Footer.vue'
+import Footer from '@/layouts/components/content/Footer.vue'
 import Login from '@/layouts/components/content/Login.vue'
 import Section1 from '@/layouts/components/content/Section1.vue'
 import Section2 from '@/layouts/components/content/Section2.vue'
@@ -16,6 +16,6 @@ import Signup from '@/layouts/components/content/Signup.vue'
     <Section2 />
     <Section3 />
     <Section4 />
-    <FooterSection />
+    <Footer />
   </div>
 </template>

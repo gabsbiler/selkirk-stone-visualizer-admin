@@ -15,9 +15,9 @@ const snackbarRef = ref(null)
 const loading = ref(false)
 
 const fetchData = async () => {
-  const response = await axios.get('/contents/section4/1/')
+  const response = await axios.get('/contents/section4/')
 
-  data.value = response.data
+  data.value = response.data[0]
 }
 
 const sendData = async () => {
@@ -80,7 +80,7 @@ onMounted(() => {
             <VCol cols="12">
               <VTextarea
                 v-model="data.body"
-                label="Heading 2"
+                label="Body"
               />
             </VCol>
             <VCol cols="12">
