@@ -35,17 +35,19 @@ const sendData = async () => {
   formData.append('heading_1', data.value.heading_1)
 
   if (banner_1.value)
-    formData.append('banner_1', banner_1.value[0])
+    formData.append('banner_photo_1', banner_1.value[0])
   if (banner_2.value)
-    formData.append('banner_2', banner_2.value[0])
+    formData.append('banner_photo_2', banner_2.value[0])
   if (banner_3.value)
-    formData.append('banner_3', banner_3.value[0])
+    formData.append('banner_photo_3', banner_3.value[0])
   if (banner_4.value)
-    formData.append('banner_4', banner_4.value[0])
+    formData.append('banner_photo_4', banner_4.value[0])
   if (banner_5.value)
-    formData.append('banner_5', banner_5.value[0])
+    formData.append('banner_photo_5', banner_5.value[0])
   if (banner_6.value)
-    formData.append('banner_6', banner_6.value[0])
+    formData.append('banner_photo_6', banner_6.value[0])
+
+  console.log(formData)
 
   try {
     const res = await axios.patch(`/contents/section3/${data.value.id}/`, formData, {
