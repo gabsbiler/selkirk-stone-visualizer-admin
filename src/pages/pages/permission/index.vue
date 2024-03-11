@@ -4,11 +4,14 @@ import ClientUser from './tabs/client-use.vue'
 
 const permissionTab = ref()
 const search = ref()
+const AdminUserRef = ref()
 
 const tabs = [
   { icon: 'bx-lock-alt', title: 'admin user permission' },
   { icon: 'bx-user', title: 'client management' },
 ]
+
+console.log(permissionTab.value)
 </script>
 
 <template>
@@ -49,6 +52,13 @@ const tabs = [
               dense
               outlined
             />
+
+            <VBtn
+              v-if="permissionTab === 0"
+              @click="AdminUserRef.openAddDialog()"
+            >
+              Add User
+            </VBtn>
           </VCol>
         </VRow>
 
@@ -57,7 +67,10 @@ const tabs = [
           class="mt-6"
         >
           <VWindowItem>
-            <AdminUser :search="search" />
+            <AdminUser
+              ref="AdminUserRef"
+              :search="search"
+            />
           </VWindowItem>
 
           <VWindowItem>

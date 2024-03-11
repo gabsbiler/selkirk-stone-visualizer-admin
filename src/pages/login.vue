@@ -1,9 +1,14 @@
 <script setup lang="ts">
+import SnackBar from '@/layouts/components/SnackBar.vue'
+import axiosIns from '@/plugins/axios'
 import { VNodeRenderer } from '@layouts/components/VNodeRenderer'
 import { themeConfig } from '@themeConfig'
 import { emailValidator, requiredValidator } from '@validators'
 
-const route = useRouter()
+const route = useRoute()
+const router = useRouter()
+const SnackBarRef = ref(null)
+const isLoading = ref(false)
 
 const form = ref({
   email: '',
@@ -13,14 +18,36 @@ const form = ref({
 
 const invalidCredentialsError = ref(false)
 
-const submitForm = () => {
-  if (form.value.email === 'admin@admin.com' && form.value.password === '@Dm1n@Dm1n') {
+const login = async () => {
+  isLoading.value = true
+  try {
+    const response = await axiosIns.post('/users/login/', {
+      email: form.value.email,
+      password: form.value.password,
+    }, {
+      withCredentials: true, // Include this line
+    })
+
+    sessionStorage.setItem('authToken', response.data.jwt)
+    sessionStorage.setItem('first_name', response.data.first_name)
+    sessionStorage.setItem('last_name', response.data.last_name)
+    sessionStorage.setItem('address', response.data.address)
+    sessionStorage.setItem('contact_number', response.data.contact_number)
+    sessionStorage.setItem('email', response.data.email)
+    sessionStorage.setItem('id', response.data.id)
     localStorage.setItem('loggedIn', '1')
-    route.push('/')
+
+    isLoading.value = false
+    console.log(response.data)
+
+    // route.push('/')
+    router.replace(route.query.to ? String(route.query.to) : '/')
   }
-  else {
+  catch (error) {
+    console.error('Login error:', error)
+    isLoading.value = false
     invalidCredentialsError.value = true
-    console.log(form.value.email + form.value.password)
+    SnackBarRef.value.show('error', 'Please check your credentials')
   }
 }
 
@@ -53,7 +80,7 @@ const isPasswordVisible = ref(false)
         </VCardText>
 
         <VCardText>
-          <VForm @submit.prevent="submitForm">
+          <VForm @submit.prevent="login">
             <VRow>
               <!-- email -->
               <VCol cols="12">
@@ -87,7 +114,11 @@ const isPasswordVisible = ref(false)
 
                 <div class="d-flex">
                   <VSpacer />
-                  <VBtn type="submit">
+                  <VBtn
+                    type="login"
+                    variant="outlined"
+                    :loading="isLoading"
+                  >
                     Login
                   </VBtn>
                 </div>
@@ -99,6 +130,7 @@ const isPasswordVisible = ref(false)
         </VCardText>
       </VCard>
     </div>
+    <SnackBar ref="SnackBarRef" />
   </div>
 </template>
 

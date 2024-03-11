@@ -12,7 +12,7 @@ const axiosIns = axios.create({
 // ℹ️ Add request interceptor to send the authorization header on each subsequent request after login
 axiosIns.interceptors.request.use(config => {
   // Retrieve token from localStorage
-  const token = localStorage.getItem('accessToken')
+  const token = sessionStorage.getItem('authToken')
 
   // If token is found
   if (token) {
@@ -21,7 +21,7 @@ axiosIns.interceptors.request.use(config => {
 
     // Set authorization header
     // ℹ️ JSON.parse will convert token to string
-    config.headers.Authorization = token ? `Bearer ${JSON.parse(token)}` : ''
+    config.headers.Authorization = token ? `Bearer ${token}` : ''
   }
 
   // Return modified config
