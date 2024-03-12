@@ -9,12 +9,8 @@ const data = ref({
   heading_2: '',
 })
 
-const banner_1 = ref()
-const banner_2 = ref()
-const banner_3 = ref()
-const banner_4 = ref()
-const banner_5 = ref()
-const banner_6 = ref()
+const banners = ref([])
+const bannerCount = ref(0)
 
 const snackbarRef = ref(null)
 
@@ -34,38 +30,28 @@ const sendData = async () => {
   formData.append('body', data.value.heading_2)
   formData.append('heading_1', data.value.heading_1)
 
-  if (banner_1.value)
-    formData.append('banner_photo_1', banner_1.value[0])
-  if (banner_2.value)
-    formData.append('banner_photo_2', banner_2.value[0])
-  if (banner_3.value)
-    formData.append('banner_photo_3', banner_3.value[0])
-  if (banner_4.value)
-    formData.append('banner_photo_4', banner_4.value[0])
-  if (banner_5.value)
-    formData.append('banner_photo_5', banner_5.value[0])
-  if (banner_6.value)
-    formData.append('banner_photo_6', banner_6.value[0])
-
-  console.log(formData)
+  // Assuming you want to upload multiple banners
+  banners.value.forEach((banner, index) => {
+    formData.append(`banner_photo_${index + 1}`, banner)
+  })
 
   try {
-    const res = await axios.patch(`/contents/section3/${data.value.id}/`, formData, {
-      headers: {
-        'Content-Type': 'multipart/form-data',
-      },
+    const response = await axios.patch(`/contents/section3/${data.value.id}/`, formData, {
+      headers: { 'Content-Type': 'multipart/form-data' },
     })
 
-    if (snackbarRef.value && res.status === 200)
+    if (response.status === 200) {
       snackbarRef.value.show('success', 'Success')
-
-    fetchData()
-    loading.value = false
+      fetchData() // Refresh data
+    }
   }
   catch (error) {
+    console.error('Failed to send data', error)
     if (snackbarRef.value)
       snackbarRef.value.show('error', 'Please contact your administrator.')
-    console.log(error)
+  }
+  finally {
+    loading.value = false
   }
 }
 
@@ -103,53 +89,29 @@ onMounted(() => {
                 label="Heading 2"
               />
             </VCol>
-            <VCol cols="6">
+            <VCol
+              v-for="i in bannerCount"
+              :key="i"
+              cols="6"
+            >
               <VFileInput
-                v-model="banner_1"
-                label="Banner Photo 1"
+                v-model="banners[i]"
+                label="Banner Photo"
                 accept="image/*"
               />
             </VCol>
-            <VCol cols="6">
-              <VFileInput
-                v-model="banner_2"
-                label="Banner Photo 2"
-                accept="image/*"
-              />
-            </VCol>
-            <VCol cols="6">
-              <VFileInput
-                v-model="banner_3"
-                label="Banner Photo 3"
-                accept="image/*"
-              />
-            </VCol>
-            <VCol cols="6">
-              <VFileInput
-                v-model="banner_4"
-                label="Banner Photo 4"
-                accept="image/*"
-              />
-            </VCol>
-            <VCol cols="6">
-              <VFileInput
-                v-model="banner_5"
-                label="Banner Photo 5"
-                accept="image/*"
-              />
-            </VCol>
-            <VCol cols="6">
-              <VFileInput
-                v-model="banner_6"
-                label="Banner Photo 6"
-                accept="image/*"
-              />
-            </VCol>
-          </vRow>
+          </VRow>
         </VForm>
 
         <div class="d-flex mt-3">
           <VSpacer />
+
+          <VBtn
+            class="me-2"
+            @click="bannerCount += 1"
+          >
+            Add Banner
+          </VBtn>
           <VBtn
             :loading="loading"
             color="primary"
