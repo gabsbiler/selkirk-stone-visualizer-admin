@@ -21,6 +21,7 @@ const loading = ref(false)
 const fetchData = async () => {
   const response = await axios.get('/contents/section3/')
 
+  console.log(response.data[0])
   data.value = response.data[0]
   bannerCount.value = data.value.banner_photos.length
   uploadedBanners.value = data.value.banner_photos
@@ -168,7 +169,7 @@ onMounted(() => {
             <VCol cols="12">
               <VTextarea
                 v-model="data.body"
-                label="Heading 2"
+                label="Body"
               />
             </VCol>
             <VCol
