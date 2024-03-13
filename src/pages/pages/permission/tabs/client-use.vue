@@ -55,10 +55,12 @@ const deleteUsers = async (id: number) => {
   }
 }
 
-const resendVerificationEmail = async (id: number) => {
+const resendVerificationEmail = async (email: string) => {
   LoadingRef.value.triggerDialog(true)
   try {
-    const response = await axios.post(`/users/send-verification-email/${id}/`)
+    const response = await axios.post('/users/verify-email/', {
+      email,
+    })
 
     console.log(response.data)
     SnackBarRef.value.show('success', 'Email Verification is sent succesfully')
@@ -72,10 +74,12 @@ const resendVerificationEmail = async (id: number) => {
   }
 }
 
-const sendResetPassword = async (id: number) => {
+const sendResetPassword = async (email: string) => {
   LoadingRef.value.triggerDialog(true)
   try {
-    const response = await axios.post(`/users/reset-password/${id}/`)
+    const response = await axios.post('/users/reset-password/', {
+      email,
+    })
 
     console.log(response.data)
     SnackBarRef.value.show('success', 'Reset Password is sent succesfully')
@@ -111,7 +115,7 @@ onMounted(async () => {
                 icon="mdi-lock-reset"
                 density="compact"
                 variant="text"
-                @click="sendResetPassword(item.raw.id)"
+                @click="sendResetPassword(item.raw.email)"
               />
             </template>
           </VTooltip>
@@ -122,7 +126,7 @@ onMounted(async () => {
                 icon="mdi-email"
                 density="compact"
                 variant="text"
-                @click="resendVerificationEmail(item.raw.id)"
+                @click="resendVerificationEmail(item.raw.email)"
               />
             </template>
           </VTooltip>
