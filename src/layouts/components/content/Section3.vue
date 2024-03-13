@@ -49,7 +49,7 @@ const sendData = async () => {
   formData.append('heading_1', data.value.heading_1)
 
   try {
-    const response = await axios.patch(`/contents/section3/${data.value.id}/`, formData, {
+    const response = await axios.patch(`/contents/section3/${data.value.id}/partial_update_section/`, formData, {
       headers: { 'Content-Type': 'multipart/form-data' },
     })
 
@@ -82,7 +82,7 @@ const updateBanner = async (id, count) => {
 
       snackbarRef.value.show('success', 'Upload Image Success')
       console.log(response)
-      fetchData()
+      await fetchData()
     }
     catch (e) {
       snackbarRef.value.show('error', 'Upload Image Error')
@@ -102,7 +102,7 @@ const updateBanner = async (id, count) => {
 
       snackbarRef.value.show('success', 'Upload Image Updated')
       console.log(response)
-      fetchData()
+      await fetchData()
     }
     catch (e) {
       snackbarRef.value.show('error', 'Update Image Error')
