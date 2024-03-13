@@ -89,12 +89,14 @@ onMounted(() => {
                 label="Heading 2"
               />
             </VCol>
-            <VCol cols="12">
+            <!--
+              <VCol cols="12">
               <VTextarea
-                v-model="data.body"
-                label="Body"
+              v-model="data.body"
+              label="Body"
               />
-            </VCol>
+              </VCol>
+            -->
             <VCol cols="6">
               <VFileInput
                 v-model="logoFile"
