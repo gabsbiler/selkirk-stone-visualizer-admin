@@ -78,6 +78,13 @@ onMounted(() => {
         <VForm>
           <VRow>
             <VCol cols="6">
+              <VFileInput
+                v-model="logoFile"
+                label="logo"
+                accept="image/*"
+              />
+            </VCol>
+            <VCol cols="6">
               <VTextField
                 v-model="data.website"
                 label="Website Link"
