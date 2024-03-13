@@ -7,7 +7,7 @@ import axios from '@axios'
 const data = ref({
   id: '',
   heading_1: '',
-  heading_2: '',
+  body: '',
 })
 
 const LoadingRef = ref()
@@ -45,7 +45,7 @@ const sendData = async () => {
 
   const formData = new FormData()
 
-  formData.append('body', data.value.heading_2)
+  formData.append('body', data.value.body)
   formData.append('heading_1', data.value.heading_1)
 
   try {
@@ -167,7 +167,7 @@ onMounted(() => {
             </VCol>
             <VCol cols="12">
               <VTextarea
-                v-model="data.heading_2"
+                v-model="data.body"
                 label="Heading 2"
               />
             </VCol>
