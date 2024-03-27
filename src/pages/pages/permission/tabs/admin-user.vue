@@ -115,7 +115,7 @@ const registerUser = async () => {
     getUsers()
   }
   catch (error) {
-    SnackBarRef.value.show('error', error.response.data)
+    SnackBarRef.value.show('error', error.response.data.error)
     console.error('Signup error:', error.response)
     isAddDialogVisible.value = false
   }

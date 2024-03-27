@@ -50,11 +50,12 @@ export default [
     action: 'Access',
     subject: 'administrator',
   },
-  {
-    title: 'Quotation',
-    to: { name: 'pages-quotation' },
-    icon: { icon: 'bx-data' },
-    action: 'Access',
-    subject: 'support',
-  },
+
+  // {
+  //   title: 'Quotation',
+  //   to: { name: 'pages-quotation' },
+  //   icon: { icon: 'bx-data' },
+  //   action: 'Access',
+  //   subject: 'support',
+  // },
 ] as VerticalNavItems
