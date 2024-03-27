@@ -35,7 +35,61 @@ const login = async () => {
     sessionStorage.setItem('contact_number', response.data.contact_number)
     sessionStorage.setItem('email', response.data.email)
     sessionStorage.setItem('id', response.data.id)
+
+    let abilities = []
+
+    // Permissions
+    if (response.data.permissions.is_administrator === true) {
+      abilities = [
+        {
+          action: 'Access',
+          subject: 'administrator',
+        },
+        {
+          action: 'Access',
+          subject: 'content_management',
+        },
+        {
+          action: 'Access',
+          subject: 'support',
+        },
+        {
+          action: 'Access',
+          subject: 'analytics',
+        },
+        {
+          action: 'Access',
+          subject: 'product_management',
+        },
+      ]
+    }
+    else {
+      abilities = [
+        {
+          action: response.data.permissions.is_administrator ? 'Access' : 'Deny',
+          subject: 'administrator',
+        },
+        {
+          action: response.data.permissions.is_content_managing ? 'Access' : 'Deny',
+          subject: 'content_management',
+        },
+        {
+          action: response.data.permissions.is_support ? 'Access' : 'Deny',
+          subject: 'support',
+        },
+        {
+          action: response.data.permissions.is_analytics ? 'Access' : 'Deny',
+          subject: 'analytics',
+        },
+        {
+          action: response.data.permissions.is_product_managing ? 'Access' : 'Deny',
+          subject: 'product_management',
+        },
+      ]
+    }
+
     localStorage.setItem('loggedIn', '1')
+    sessionStorage.setItem('userAbilities', JSON.stringify(abilities))
 
     isLoading.value = false
     console.log(response.data)

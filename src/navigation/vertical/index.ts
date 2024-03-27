@@ -6,9 +6,24 @@ export default [
     icon: { icon: 'bx-home-alt' },
 
     children: [
-      { title: 'Summary', to: 'index' },
-      { title: 'Product Analytics', to: 'dashboard-product-analytics' },
-      { title: 'User Analytics', to: 'dashboard-user-analytics' },
+      {
+        title: 'Summary',
+        to: 'index',
+        action: 'Access',
+        subject: 'analytics',
+      },
+      {
+        title: 'Product Analytics',
+        to: 'dashboard-product-analytics',
+        action: 'Access',
+        subject: 'analytics',
+      },
+      {
+        title: 'User Analytics',
+        to: 'dashboard-user-analytics',
+        action: 'Access',
+        subject: 'analytics',
+      },
     ],
   },
   { heading: 'Pages' },
@@ -16,20 +31,28 @@ export default [
     title: 'Product',
     to: { name: 'pages-product' },
     icon: { icon: 'bx-box' },
+    action: 'Access',
+    subject: 'product_management',
   },
   {
     title: 'Content',
     to: { name: 'pages-content' },
     icon: { icon: 'bx-file-blank' },
+    action: 'Access',
+    subject: 'content_management',
   },
   {
     title: 'Permission',
     to: { name: 'pages-permission' },
     icon: { icon: 'bx-lock' },
+    action: 'Access',
+    subject: 'administrator',
   },
   {
     title: 'Quotation',
     to: { name: 'pages-quotation' },
     icon: { icon: 'bx-data' },
+    action: 'Access',
+    subject: 'support',
   },
 ] as VerticalNavItems
