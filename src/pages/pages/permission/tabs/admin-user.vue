@@ -15,6 +15,8 @@ const users = ref()
 const isEditLoading = ref(false)
 const isDeleteLoading = ref(false)
 const isAddLoading = ref(false)
+const toDelete = ref()
+const deletePrompt = ref(false)
 
 const headers = [
   { title: 'USER', key: 'first_name' },
@@ -50,13 +52,14 @@ const selectUser = (user: unknown) => {
 }
 
 const deleteUser = async () => {
+  deletePrompt.value = false
   isDeleteLoading.value = true
   try {
     const response = await axios.delete(`/users/get-users/${selectedUser.value.raw.id}/`)
 
     SnackBarRef.value.show('success', 'User Deleted Succesfully')
     isDialogVisible.value = false
-    getUsers()
+    await getUsers()
   }
   catch (error) {
     console.error('Deletion error:', error)
@@ -291,7 +294,7 @@ onMounted(() => {
                   color="error"
                   variant="outlined"
                   :loading="isDeleteLoading"
-                  @click="deleteUser(selectedUser.raw.id)"
+                  @click="deletePrompt = true"
                 >
                   Delete
                 </VBtn>
@@ -496,6 +499,45 @@ onMounted(() => {
       </VCard>
     </VDialog>
 
+    <!-- Delete User Prompt -->
+    <VDialog
+      v-model="deletePrompt"
+      max-width="500"
+    >
+      <VCard class="text-center px-10 py-6">
+        <VCardText>
+          <VBtn
+            icon
+            variant="outlined"
+            color="warning"
+            class="my-4"
+            style=" block-size: 88px;inline-size: 88px; pointer-events: none;"
+          >
+            <span class="text-5xl">!</span>
+          </VBtn>
+
+          <h6 class="text-lg font-weight-medium">
+            Are you sure you want to delete your account? This action cannot be undone.
+          </h6>
+        </VCardText>
+
+        <VCardActions class="align-center justify-center gap-2">
+          <VBtn
+            variant="elevated"
+            @click="deleteUser"
+          >
+            Confirm
+          </VBtn>
+
+          <VBtn
+            color="secondary"
+            variant="tonal"
+          >
+            Cancel
+          </VBtn>
+        </VCardActions>
+      </VCard>
+    </VDialog>
     <SnackBar ref="SnackBarRef" />
   </section>
 </template>

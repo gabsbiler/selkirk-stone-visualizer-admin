@@ -8,6 +8,8 @@ const props = defineProps({
   search: String,
 })
 
+const deletePrompt = ref()
+const selectedUser = ref()
 const users = ref()
 const SnackBarRef = ref()
 const LoadingRef = ref()
@@ -40,12 +42,13 @@ const getUsers = async () => {
 }
 
 const deleteUsers = async (id: number) => {
+  deletePrompt.value = false
   LoadingRef.value.triggerDialog(true)
   try {
     const response = await axios.delete(`/users/get-users/${id}/`)
 
     console.log(response.data)
-    SnackBarRef.value.show('success', response.data.messsage)
+    SnackBarRef.value.show('success', response.message)
     await getUsers()
   }
   catch (error) {
@@ -139,7 +142,10 @@ onMounted(async () => {
                 density="compact"
                 variant="text"
                 :loading="isDeleteLoading"
-                @click="deleteUsers(item.raw.id)"
+                @click="() => {
+                  selectedUser = item.raw.id
+                  deletePrompt = true
+                }"
               />
             </template>
           </VTooltip>
@@ -148,5 +154,46 @@ onMounted(async () => {
     </VDataTable>
     <SnackBar ref="SnackBarRef" />
     <Loading ref="LoadingRef" />
+
+    <!-- Delete User Prompt -->
+    <VDialog
+      v-model="deletePrompt"
+      max-width="500"
+    >
+      <VCard class="text-center px-10 py-6">
+        <VCardText>
+          <VBtn
+            icon
+            variant="outlined"
+            color="warning"
+            class="my-4"
+            style=" block-size: 88px;inline-size: 88px; pointer-events: none;"
+          >
+            <span class="text-5xl">!</span>
+          </VBtn>
+
+          <h6 class="text-lg font-weight-medium">
+            Are you sure you want to delete your account? This action cannot be undone.
+          </h6>
+        </VCardText>
+
+        <VCardActions class="align-center justify-center gap-2">
+          <VBtn
+            variant="elevated"
+            @click="deleteUsers(selectedUser)"
+          >
+            Confirm
+          </VBtn>
+
+          <VBtn
+            color="secondary"
+            variant="tonal"
+            @click="deletePrompt = false"
+          >
+            Cancel
+          </VBtn>
+        </VCardActions>
+      </VCard>
+    </VDialog>
   </div>
 </template>

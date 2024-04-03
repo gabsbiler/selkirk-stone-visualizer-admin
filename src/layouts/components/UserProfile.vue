@@ -70,21 +70,9 @@ const logout = () => {
                 size="22"
               />
             </template>
-
-            <VListItemTitle>Profile</VListItemTitle>
-          </VListItem>
-
-          <!-- 👉 Settings -->
-          <VListItem link>
-            <template #prepend>
-              <VIcon
-                class="me-2"
-                icon="bx-cog"
-                size="22"
-              />
-            </template>
-
-            <VListItemTitle>Settings</VListItemTitle>
+            <RouterLink to="/profile">
+              <VListItemTitle>Profile</VListItemTitle>
+            </RouterLink>
           </VListItem>
 
           <!-- Divider -->
