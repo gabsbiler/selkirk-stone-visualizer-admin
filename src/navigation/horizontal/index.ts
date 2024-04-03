@@ -28,6 +28,13 @@ export default [
       },
     ],
   },
+  {
+    title: 'Visualizer Uploads',
+    to: { name: 'pages-visualizer-uploads' },
+    icon: { icon: 'bx-lock' },
+    action: 'Access',
+    subject: 'administrator',
+  },
   { heading: 'Pages' },
   {
     title: 'Product',
@@ -58,4 +65,5 @@ export default [
   //   action: 'Access',
   //   subject: 'support',
   // },
+
 ] as VerticalNavItems
