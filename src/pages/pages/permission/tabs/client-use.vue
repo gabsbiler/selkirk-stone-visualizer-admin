@@ -48,7 +48,7 @@ const deleteUsers = async (id: number) => {
     const response = await axios.delete(`/users/get-users/${id}/`)
 
     console.log(response.data)
-    SnackBarRef.value.show('success', response.message)
+    SnackBarRef.value.show('success', 'User Deleted Succesfully')
     await getUsers()
   }
   catch (error) {

@@ -517,7 +517,7 @@ onMounted(() => {
           </VBtn>
 
           <h6 class="text-lg font-weight-medium">
-            Are you sure you want to delete your account? This action cannot be undone.
+            Are you sure you want to delete this account? This action cannot be undone.
           </h6>
         </VCardText>
 
