@@ -158,12 +158,19 @@ const isPasswordVisible = ref(false)
                   @click:append-inner="isPasswordVisible = !isPasswordVisible"
                 />
 
-                <!-- remember me checkbox -->
                 <div class="d-flex align-center justify-space-between flex-wrap mt-2 mb-4">
                   <VCheckbox
                     v-model="form.remember"
                     label="Remember me"
                   />
+
+                  <a
+                    href="https://selkirkstone.app/forgot-password"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    Forgot Password?
+                  </a>
                 </div>
 
                 <div class="d-flex">
