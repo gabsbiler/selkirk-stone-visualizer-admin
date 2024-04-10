@@ -1,49 +1,39 @@
 <script setup lang="ts">
 import { VDataTable } from 'vuetify/labs/VDataTable'
+import axiosIns from '@/plugins/axios'
 
 const headers = ref([
-  { title: 'No.', key: 'no' },
   { title: 'Browser', key: 'browser' },
-  { title: 'Visits', key: 'visits' },
-  { title: 'Percentage', key: 'percentage' },
+  { title: 'Visits', key: 'count' },
 ])
 
-const data = ref([
-  {
-    no: 4,
-    browser: 'Opera',
-    visits: '33k',
-    percentage: '48',
-  },
-  {
-    no: 1,
-    browser: 'Chrome',
-    visits: '78k',
-    percentage: '52',
-  },
-  {
-    no: 2,
-    browser: 'Safari',
-    visits: '64k',
-    percentage: '87',
-  },
-  {
-    no: 3,
-    browser: 'Edge',
-    visits: '25k',
-    percentage: '67',
-  },
-  {
-    no: 5,
-    browser: 'Vivaldi',
-    visits: '26k',
-    percentage: '44',
-  },
-])
+const data = ref([])
+
+const loading = ref(false)
+
+const fetch = async () => {
+  loading.value = true
+  try {
+    const response = await axiosIns.get('https://selkirkappapi.azurewebsites.net/api/analytics/aggregate/')
+
+    data.value = response.data.browsers_count
+    console.log(data.value)
+  }
+  catch (e) {
+    console.log(e)
+  }
+  finally {
+    loading.value = false
+  }
+}
+
+onMounted(() => {
+  fetch()
+})
 </script>
 
 <template>
-  <VCard>
+  <VCard :loading="loading">
     <VCardText>
       <div class="d-flex align-center justify-space-between">
         <h6 class="text-h6">

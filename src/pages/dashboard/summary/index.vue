@@ -4,6 +4,24 @@ import TopMostCollectedStoneVariant from '@/layouts/components/dashboard/summary
 import TopMostPopularStoneVariant from '@/layouts/components/dashboard/summary/TopMostPopularStoneVariant.vue'
 import UserLocHeatmap from '@/layouts/components/dashboard/summary/UserLocHeatmap.vue'
 import UserStatsCard from '@/layouts/components/dashboard/summary/UserStatsCard.vue'
+import axiosIns from '@/plugins/axios'
+
+const data = ref()
+
+const fetch = async () => {
+  try {
+    const response = await axiosIns.get('https://selkirkappapi.azurewebsites.net/api/analytics/aggregate/')
+
+    data.value = response.data
+  }
+  catch (e) {
+    console.log(e)
+  }
+}
+
+onMounted(() => {
+  fetch()
+})
 </script>
 
 <template>

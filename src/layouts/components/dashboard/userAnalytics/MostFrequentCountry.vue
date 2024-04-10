@@ -1,26 +1,35 @@
 <script setup lang="ts">
-const items = ref([
-  {
-    country: 'Nigeria',
-    count: '85k',
-  },
-  {
-    country: 'Philippines',
-    count: '85k',
-  },
-  {
-    country: ' Canada',
-    count: '85k',
-  },
-  {
-    country: 'Taiwan',
-    count: '85k',
-  },
-])
+import axiosIns from '@/plugins/axios'
+
+const items = ref([])
+
+const loading = ref(false)
+
+const fetch = async () => {
+  loading.value = true
+  try {
+    const response = await axiosIns.get('https://selkirkappapi.azurewebsites.net/api/analytics/aggregate/')
+
+    items.value = response.data.locations
+  }
+  catch (e) {
+    console.log(e)
+  }
+  finally {
+    loading.value = false
+  }
+}
+
+onMounted(() => {
+  fetch()
+})
 </script>
 
 <template>
-  <VCard height="400">
+  <VCard
+    height="400"
+    :loading="loading"
+  >
     <VCardText>
       <h6 class="text-h6">
         Most Frequent Users Location

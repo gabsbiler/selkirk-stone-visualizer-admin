@@ -1,7 +1,25 @@
 <script setup lang="ts">
 import { useTheme } from 'vuetify'
+import axiosIns from '@/plugins/axios'
 import { getLineChartConfig } from '@core/libs/chartjs/chartjsConfig'
 import LineChart from '@core/libs/chartjs/components/LineChart'
+
+const content = ref()
+
+const fetch = async () => {
+  try {
+    const response = await axiosIns.get('https://selkirkappapi.azurewebsites.net/api/analytics/aggregate/')
+
+    data.value = response.data
+  }
+  catch (e) {
+    console.log(e)
+  }
+}
+
+onMounted(() => {
+  fetch()
+})
 
 const filterTab = ref('week')
 
