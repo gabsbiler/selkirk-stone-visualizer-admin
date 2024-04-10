@@ -1,41 +1,89 @@
 <script setup lang="ts">
-import { computed, ref } from 'vue'
-import LineChart from '@core/libs/chartjs/components/LineChart'
 import BarChart from '@core/libs/chartjs/components/BarChart'
+import { computed } from 'vue'
 
-const userDaysSelect = ref('7 Days')
+const props = defineProps<{
+  data: object,
+  days: number
+}>()
 
-const data = {
-  labels: ['Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa', 'Su'],
+const { data, days } = toRefs(props)
+
+watchDebounced(data, () => {
+  const date = new Date(new Date().setHours(0,0,0,0))
+  const minDate = new Date(date)
+  minDate.setDate(date.getDate() - days.value)
+
+  const value = data.value || []
+  const firstVisits = value.reduce((p, c) => {
+    const firstVisit = new Date(new Date(c.FirstVisit).setHours(0,0,0,0))
+    if (firstVisit >= minDate) {
+      const firstVisitText = firstVisit.toLocaleDateString()
+      if (!p.hasOwnProperty(firstVisitText))
+        p[firstVisitText] = 0
+
+      p[firstVisitText]++
+    }
+
+    return p
+  }, {})
+  const firstVisitsTotal = Object.values(firstVisits).reduce((a, b) => a + b, 0)
+
+  const visits = value.reduce((p, c) => {
+    const lastVisit = new Date(new Date(c.LastVisit).setHours(0,0,0,0))
+    const lastVisitText = lastVisit.toLocaleDateString()
+    if (!p.hasOwnProperty(lastVisitText))
+      p[lastVisitText] = 0
+
+    p[lastVisitText]++
+
+    return p
+  }, {})
+  const visitsTotal = Object.values(visits).reduce((a, b) => a + b, 0)
+
+  const firstVisitorsChartDataCopy = JSON.parse(JSON.stringify(firstVisitorsChartData.value))
+  const firstVisitorsKeys = Object.keys(firstVisits).sort((a, b) => new Date(a) - new Date(b))
+  firstVisitorsChartDataCopy.labels = Object.keys(firstVisits)
+  firstVisitorsChartDataCopy.datasets[0].data = firstVisitorsKeys.map(x => firstVisits[x])
+  firstVisitorsChartData.value = firstVisitorsChartDataCopy
+  firstVisitorsPercentage.value = Math.round((firstVisitsTotal / visitsTotal) * 100)
+
+  const visitorsChartDataCopy = JSON.parse(JSON.stringify(visitorsChartData.value))
+  const visitorsKeys = Object.keys(visits).sort((a, b) => new Date(a) - new Date(b))
+  visitorsChartDataCopy.labels = Object.keys(visits)
+  visitorsChartDataCopy.datasets[0].data = visitorsKeys.map(x => visits[x])
+  visitorsChartData.value = visitorsChartDataCopy
+  visitorsPercentage.value = 100 - firstVisitorsPercentage.value
+  console.log(visitsTotal, firstVisitsTotal, firstVisitorsPercentage.value)
+}, {})
+
+const visitorsPercentage = ref(0)
+const visitorsChartData = ref({
+  labels: [],
   datasets: [
     {
-      tension: 0.5,
-      pointRadius: 5,
-      pointHoverRadius: 5,
-      pointStyle: 'circle',
-      borderColor: 'green',
-      backgroundColor: 'green',
-      pointHoverBorderWidth: 5,
-      pointHoverBorderColor: 'white',
-      pointBorderColor: 'transparent',
-      pointHoverBackgroundColor: 'green',
-      data: [80, 150, 350, 200, 150, 123, 300],
+      label: 'Visitors',
+      data: [],
+      backgroundColor: 'green', 
+      borderRadius: 20,
+      barThickness: 30,
     },
   ],
-}
+})
 
-const newVisitorsChart = {
-  labels: ['M', 'T', 'W', 'T', 'F', 'S', 'S'],
+const firstVisitorsPercentage = ref(0)
+const firstVisitorsChartData = ref({
+  labels: [],
   datasets: [
     {
-      label: 'Daily Visitors',
-      data: [80, 150, 350, 200, 180, 300, 400], // Example data
-      backgroundColor: 'green', // Use your desired color
-      borderRadius: 20, // Adjust for desired roundness
-      barThickness: 30, // Adjust bar width
+      label: 'New Visitors',
+      data: [],
+      backgroundColor: 'green', 
+      borderRadius: 20,
+      barThickness: 30,
     },
   ],
-}
+})
 
 // Computed property to create the chart options
 const chartOptions = computed(() => {
@@ -73,15 +121,8 @@ const chartOptions = computed(() => {
               <VCardTitle>
                 <VRow class="d-flex align-center">
                   <VCol cols="5">
-                    Users
+                    Visitors
                   </VCol>
-                  <VCol cols="3" />
-                  <VSelect
-                    v-model="userDaysSelect"
-                    :items="['7 Days', '14 Days', '30 Days', '3 Months']"
-                    variant="plain"
-                    density="compact"
-                  />
                 </VRow>
               </VCardTitle>
               <VCardText>
@@ -93,18 +134,14 @@ const chartOptions = computed(() => {
                   >
                     <div class="d-flex">
                       <h2 class="text-h2">
-                        82%
+                        {{visitorsPercentage}}%
                       </h2>
                     </div>
-
-                    <p class="text-success">
-                      <VIcon icon="mdi-arrow-up" />19.6%
-                    </p>
                   </VCol>
                   <VCol>
-                    <LineChart
+                    <BarChart
                       :height="150"
-                      :chart-data="data"
+                      :chart-data="visitorsChartData"
                       :options="chartOptions"
                     />
                   </VCol>
@@ -126,18 +163,14 @@ const chartOptions = computed(() => {
                   >
                     <div class="d-flex">
                       <h2 class="text-h2">
-                        23%
+                        {{firstVisitorsPercentage}}%
                       </h2>
                     </div>
-
-                    <p class="text-error">
-                      <VIcon icon="mdi-arrow-down" />19.6%
-                    </p>
                   </VCol>
                   <VCol>
                     <BarChart
                       :height="150"
-                      :chart-data="newVisitorsChart"
+                      :chart-data="firstVisitorsChartData"
                       :options="chartOptions"
                     />
                   </VCol>
