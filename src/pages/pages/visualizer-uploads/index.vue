@@ -1,11 +1,12 @@
 <script setup lang="ts">
-import { VDataTable } from 'vuetify/labs/VDataTable'
 import axiosIns from '@/plugins/axios'
+import { VDataTable } from 'vuetify/labs/VDataTable'
 
 const headers = [
   { title: 'ID', key: 'id' },
   { title: 'Uploads', key: 'raw_image' },
   { title: 'Visualized', key: 'edited_image' },
+  { title: 'Date Uploaded', key: 'uploaded_at' },
 ]
 
 const data = ref()
@@ -15,6 +16,7 @@ const fetchData = async () => {
     const response = await axiosIns.get('/viz-image/images/')
 
     data.value = response.data
+    console.log(response.data)
   }
   catch (e) {
     console.log(e)
