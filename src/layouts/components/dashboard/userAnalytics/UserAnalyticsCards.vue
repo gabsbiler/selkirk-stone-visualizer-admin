@@ -37,7 +37,7 @@ const cardsContent = ref([
   },
   {
     title: 'Time on Site',
-    number: 45,
+    number: 0,
     difference: 14,
     icon: {
       color: 'text',
@@ -46,7 +46,7 @@ const cardsContent = ref([
   },
   {
     title: 'Bounce Rate',
-    number: 45,
+    number: 0,
     difference: 14,
     icon: {
       color: 'error',
