@@ -95,7 +95,10 @@ const login = async () => {
     console.log(response.data)
 
     // route.push('/')
-    router.replace(route.query.to ? String(route.query.to) : '/')
+    if (route.query.to)
+      window.location.href = String(route.query.to)
+    else
+      window.location.href = '/'
   }
   catch (error) {
     console.error('Login error:', error)
