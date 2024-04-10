@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import axiosIns from '@/plugins/axios'
 import { VDataTable } from 'vuetify/labs/VDataTable'
+import axiosIns from '@/plugins/axios'
 
 const headers = [
   { title: 'ID', key: 'id' },
@@ -10,8 +10,10 @@ const headers = [
 ]
 
 const data = ref()
+const loading = ref(false)
 
 const fetchData = async () => {
+  loading.value = true
   try {
     const response = await axiosIns.get('/viz-image/images/')
 
@@ -20,6 +22,9 @@ const fetchData = async () => {
   }
   catch (e) {
     console.log(e)
+  }
+  finally {
+    loading.value = false
   }
 }
 
@@ -41,7 +46,7 @@ onMounted(() => {
 
 <template>
   <div>
-    <VCard>
+    <VCard :loading="loading">
       <VCardText>
         <VDataTable
           :headers="headers"
