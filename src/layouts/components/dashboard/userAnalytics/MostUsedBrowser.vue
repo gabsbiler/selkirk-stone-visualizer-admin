@@ -1,57 +1,67 @@
 <script setup lang="ts">
-import { VDataTable } from 'vuetify/labs/VDataTable'
-import axiosIns from '@/plugins/axios'
+const props = defineProps<{
+  data: object
+}>()
 
-const headers = ref([
-  { title: 'Browser', key: 'browser' },
-  { title: 'Visits', key: 'count' },
-])
+const { data } = toRefs(props)
 
-const data = ref([])
+watchDebounced(data, () => {
+  const value = data.value || []
 
-const loading = ref(false)
+  const groupedValue = value.reduce((p, c) => {
+    const name = c.ClientBrowser?.split(' ')[0]
+    if (!p.hasOwnProperty(name))
+      p[name] = 0
 
-const fetch = async () => {
-  loading.value = true
-  try {
-    const response = await axiosIns.get('https://selkirkappapi.azurewebsites.net/api/analytics/aggregate/')
+    p[name] += c.count_
 
-    data.value = response.data.browsers_count
-    console.log(data.value)
+    return p
+  }, {})
+
+  const newItems = []
+  const keys = Object.keys(groupedValue)
+
+  for (let i = 0; i < Math.min(10, keys.length); i++) {
+    const key = keys[i]
+
+    newItems.push({
+      browser: key,
+      count: groupedValue[key],
+    })
   }
-  catch (e) {
-    console.log(e)
-  }
-  finally {
-    loading.value = false
-  }
-}
 
-onMounted(() => {
-  fetch()
-})
+  items.value = newItems
+}, { debounce: 100, maxWait: 200 })
+
+const items = ref([])
 </script>
 
 <template>
-  <VCard :loading="loading">
+  <VCard height="400">
     <VCardText>
-      <div class="d-flex align-center justify-space-between">
-        <h6 class="text-h6">
-          Most Used Browser
-        </h6>
-        <div style="min-inline-size: 15rem;">
-          <VTextField
-            label="Search"
-            density="compact"
-          />
-        </div>
-      </div>
-
+      <h6 class="text-h6">
+        Most Used Browsers
+      </h6>
       <hr class="my-3">
-      <VDataTable
-        :headers="headers"
-        :items="data"
-      />
+      <div>
+        <VTable>
+          <thead>
+            <tr>
+              <th>BROWSER</th>
+              <th>USERS</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr
+              v-for="item in items"
+              :key="item.browser"
+            >
+              <td>{{ item.browser }}</td>
+              <td>{{ item.count }}</td>
+            </tr>
+          </tbody>
+        </VTable>
+      </div>
     </VCardText>
   </VCard>
 </template>

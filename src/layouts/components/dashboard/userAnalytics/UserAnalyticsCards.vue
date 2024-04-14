@@ -1,8 +1,25 @@
 <script setup lang="ts">
+import type { AnyObject } from '@casl/ability/dist/types/types'
+
+const props = defineProps<{
+  data: AnyObject
+}>()
+
+const { data } = toRefs(props)
+
+watchDebounced(data, () => {
+  const value = data.value || []
+  const cardsContentCopy = JSON.parse(JSON.stringify(cardsContent.value))
+
+  cardsContentCopy[0].number = value.reduce((a, b) => a + b.Count, 0)
+  cardsContentCopy[1].number = Math.round(cardsContentCopy[0].number / 2)
+  cardsContent.value = cardsContentCopy
+}, {})
+
 const cardsContent = ref([
   {
     title: 'Session',
-    number: 1234,
+    number: 0,
     difference: 12,
     icon: {
       color: 'warning',
@@ -11,7 +28,7 @@ const cardsContent = ref([
   },
   {
     title: 'Ave. Session Rate',
-    number: 45,
+    number: 0,
     difference: 14,
     icon: {
       color: 'success',
@@ -20,7 +37,7 @@ const cardsContent = ref([
   },
   {
     title: 'Time on Site',
-    number: 45,
+    number: 0,
     difference: 14,
     icon: {
       color: 'text',
@@ -29,7 +46,7 @@ const cardsContent = ref([
   },
   {
     title: 'Bounce Rate',
-    number: 45,
+    number: 0,
     difference: 14,
     icon: {
       color: 'error',
@@ -57,10 +74,6 @@ const cardsContent = ref([
                   <h6 class="text-h4">
                     {{ item.number }}
                   </h6>
-
-                  <p class="text-success text-body-2 ma-0 mx-1">
-                    (+{{ item.difference }}%)
-                  </p>
                 </div>
               </VCol>
               <VCol
