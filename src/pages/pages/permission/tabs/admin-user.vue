@@ -17,6 +17,7 @@ const isDeleteLoading = ref(false)
 const isAddLoading = ref(false)
 const toDelete = ref()
 const deletePrompt = ref(false)
+const loading = ref(false)
 
 const headers = [
   { title: 'USER', key: 'first_name' },
@@ -70,10 +71,13 @@ const deleteUser = async () => {
 }
 
 const getUsers = async () => {
+  loading.value = true
+
   const response = await axios.get('/users/get-users/')
 
   users.value = response.data
   users.value = users.value.filter((user: { is_admin: boolean }) => user.is_admin)
+  loading.value = false
 }
 
 const updateUser = async () => {
@@ -142,6 +146,7 @@ onMounted(() => {
       :headers="headers"
       :items="users"
       :search="props.search"
+      :loading="loading"
     >
       <template #item.permissions="{ item }">
         <span
