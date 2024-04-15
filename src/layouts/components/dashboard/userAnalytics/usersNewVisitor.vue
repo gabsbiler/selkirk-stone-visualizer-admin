@@ -3,68 +3,77 @@ import BarChart from '@core/libs/chartjs/components/BarChart'
 import { computed } from 'vue'
 
 const props = defineProps<{
-  data: object,
+  loading: boolean
+  data: object
   days: number
 }>()
 
-const { data, days } = toRefs(props)
+const { loading, data, days } = toRefs(props)
 
 watchDebounced(data, () => {
-  const date = new Date(new Date().setHours(0,0,0,0))
+  const date = new Date(new Date().setHours(0, 0, 0, 0))
   const minDate = new Date(date)
+
   minDate.setDate(date.getDate() - days.value)
 
-  const value = data.value || []
-  const firstVisits = value.reduce((p, c) => {
-    const firstVisit = new Date(new Date(c.FirstVisit).setHours(0,0,0,0))
-    if (firstVisit >= minDate) {
-      const firstVisitText = firstVisit.toLocaleDateString()
-      if (!p.hasOwnProperty(firstVisitText))
-        p[firstVisitText] = 0
+  console.log(minDate)
 
-      p[firstVisitText]++
+  const value = data.value || []
+
+  const firstVisits = value.reduce((p, c) => {
+    const firstVisit = new Date(new Date(c.FirstVisit))
+    if (firstVisit >= minDate) {
+      const firstVisitText = c.FirstVisit.substring(0, 10)
+      if (!p.hasOwnProperty(firstVisitText))
+        p[firstVisitText] = { count: 0, userIds: [c.UserId] }
+
+      if (!p[firstVisitText].userIds.includes(c.UserId))
+        p[firstVisitText].count++
     }
 
     return p
   }, {})
-  const firstVisitsTotal = Object.values(firstVisits).reduce((a, b) => a + b, 0)
+
+  const firstVisitsTotal = Object.values(firstVisits).reduce((a, b) => a + b.count, 0)
 
   const visits = value.reduce((p, c) => {
-    const lastVisit = new Date(new Date(c.LastVisit).setHours(0,0,0,0))
-    const lastVisitText = lastVisit.toLocaleDateString()
-    if (!p.hasOwnProperty(lastVisitText))
-      p[lastVisitText] = 0
+    const timeGeneratedText = c.TimeGenerated.substring(0, 10)
+    if (!p.hasOwnProperty(timeGeneratedText))
+      p[timeGeneratedText] = 0
 
-    p[lastVisitText]++
+    p[timeGeneratedText]++
 
     return p
   }, {})
+
   const visitsTotal = Object.values(visits).reduce((a, b) => a + b, 0)
 
   const firstVisitorsChartDataCopy = JSON.parse(JSON.stringify(firstVisitorsChartData.value))
   const firstVisitorsKeys = Object.keys(firstVisits).sort((a, b) => new Date(a) - new Date(b))
-  firstVisitorsChartDataCopy.labels = Object.keys(firstVisits)
-  firstVisitorsChartDataCopy.datasets[0].data = firstVisitorsKeys.map(x => firstVisits[x])
+
+  firstVisitorsChartDataCopy.labels = firstVisitorsKeys
+  firstVisitorsChartDataCopy.datasets[0].data = firstVisitorsKeys.map(x => firstVisits[x].count)
   firstVisitorsChartData.value = firstVisitorsChartDataCopy
   firstVisitorsPercentage.value = Math.round((firstVisitsTotal / visitsTotal) * 100)
 
   const visitorsChartDataCopy = JSON.parse(JSON.stringify(visitorsChartData.value))
   const visitorsKeys = Object.keys(visits).sort((a, b) => new Date(a) - new Date(b))
-  visitorsChartDataCopy.labels = Object.keys(visits)
+
+  visitorsChartDataCopy.labels = visitorsKeys
   visitorsChartDataCopy.datasets[0].data = visitorsKeys.map(x => visits[x])
   visitorsChartData.value = visitorsChartDataCopy
   visitorsPercentage.value = 100 - firstVisitorsPercentage.value
-  console.log(visitsTotal, firstVisitsTotal, firstVisitorsPercentage.value)
 }, {})
 
 const visitorsPercentage = ref(0)
+
 const visitorsChartData = ref({
   labels: [],
   datasets: [
     {
       label: 'Visitors',
       data: [],
-      backgroundColor: 'green', 
+      backgroundColor: 'green',
       borderRadius: 20,
       barThickness: 30,
     },
@@ -72,13 +81,14 @@ const visitorsChartData = ref({
 })
 
 const firstVisitorsPercentage = ref(0)
+
 const firstVisitorsChartData = ref({
   labels: [],
   datasets: [
     {
       label: 'New Visitors',
       data: [],
-      backgroundColor: 'green', 
+      backgroundColor: 'green',
       borderRadius: 20,
       barThickness: 30,
     },
@@ -112,7 +122,7 @@ const chartOptions = computed(() => {
   <section>
     <VRow>
       <VCol>
-        <VCard>
+        <VCard :loading="loading">
           <VRow class="mt-1">
             <VCol
               cols="12"
@@ -134,7 +144,7 @@ const chartOptions = computed(() => {
                   >
                     <div class="d-flex">
                       <h2 class="text-h2">
-                        {{visitorsPercentage}}%
+                        {{ visitorsPercentage }}%
                       </h2>
                     </div>
                   </VCol>
@@ -163,7 +173,7 @@ const chartOptions = computed(() => {
                   >
                     <div class="d-flex">
                       <h2 class="text-h2">
-                        {{firstVisitorsPercentage}}%
+                        {{ firstVisitorsPercentage }}%
                       </h2>
                     </div>
                   </VCol>
