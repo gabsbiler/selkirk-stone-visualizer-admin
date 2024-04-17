@@ -34,13 +34,14 @@ export default [
     subject: 'administrator',
   },
   { heading: 'Pages' },
-  {
-    title: 'Product',
-    to: { name: 'pages-product' },
-    icon: { icon: 'bx-box' },
-    action: 'Access',
-    subject: 'product_management',
-  },
+
+  // {
+  //   title: 'Product',
+  //   to: { name: 'pages-product' },
+  //   icon: { icon: 'bx-box' },
+  //   action: 'Access',
+  //   subject: 'product_management',
+  // },
   {
     title: 'Content',
     to: { name: 'pages-content' },
