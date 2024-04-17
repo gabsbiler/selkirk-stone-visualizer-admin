@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { VDataTable } from 'vuetify/labs/VDataTable'
+import Loading from '@/layouts/components/Loading.vue'
 import SnackBar from '@/layouts/components/SnackBar.vue'
 import axios from '@axios'
 
@@ -18,6 +19,7 @@ const isAddLoading = ref(false)
 const toDelete = ref()
 const deletePrompt = ref(false)
 const loading = ref(false)
+const LoadingRef = ref()
 
 const headers = [
   { title: 'USER', key: 'first_name' },
@@ -71,13 +73,19 @@ const deleteUser = async () => {
 }
 
 const getUsers = async () => {
-  loading.value = true
+  LoadingRef.value.triggerDialog(true)
+  try {
+    const response = await axios.get('/users/get-users/')
 
-  const response = await axios.get('/users/get-users/')
-
-  users.value = response.data
-  users.value = users.value.filter((user: { is_admin: boolean }) => user.is_admin)
-  loading.value = false
+    users.value = response.data
+    users.value = users.value.filter((user: { is_admin: boolean }) => user.is_admin)
+  }
+  catch (e) {
+    console.log(e)
+  }
+  finally {
+    LoadingRef.value.triggerDialog(false)
+  }
 }
 
 const updateUser = async () => {
@@ -194,6 +202,8 @@ onMounted(() => {
         </div>
       </template>
     </VDataTable>
+
+    <Loading ref="LoadingRef" />
 
     <!-- Edit User -->
     <VDialog
