@@ -1,9 +1,10 @@
 <script setup lang="ts">
 const props = defineProps<{
+  loading: boolean
   data: object
 }>()
 
-const { data } = toRefs(props)
+const { loading, data } = toRefs(props)
 
 watchDebounced(data, () => {
   const value = data.value || []
@@ -27,6 +28,7 @@ const items = ref([])
 <template>
   <VCard
     height="400"
+    :loading="loading"
   >
     <VCardText>
       <h6 class="text-h6">
