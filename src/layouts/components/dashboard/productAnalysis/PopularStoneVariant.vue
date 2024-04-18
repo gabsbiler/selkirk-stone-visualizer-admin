@@ -1,89 +1,111 @@
 <script setup lang="ts">
 import { VDataTable } from 'vuetify/labs/VDataTable'
+import axiosIns from '@/plugins/axios'
 
 const search = ref()
+const loading = ref(true)
 
 const header = [
-  { title: 'No', key: 'index', sortable: false },
-  { title: 'Stone Category', key: 'stoneCategory' },
-  { title: 'Stone Color', key: 'stoneColor' },
-  { title: 'Category', key: 'category' },
-  { title: 'Views', key: 'view' },
+  { title: 'No', key: 'rank', sortable: false },
+  { title: 'Stone Category', key: 'stone_category' },
+  { title: 'Stone Color', key: 'stone_color' },
+  { title: 'Count', key: 'count' },
 ]
 
-const items = ref([
-  {
-    stoneCategory: 'Hedge Stone',
-    stoneColor: 'Brown',
-    category: 'Exterior',
-    view: '192k',
-  },
-  {
-    stoneCategory: 'Stone Bricks',
-    stoneColor: 'Marble',
-    category: 'Interior',
-    view: '129k',
-  },
-  {
-    stoneCategory: 'Sandstone',
-    stoneColor: 'Brown',
-    category: 'Fireplace',
-    view: '98k',
-  },
-  {
-    stoneCategory: 'Quartzite',
-    stoneColor: 'Basalt',
-    category: 'Exterior',
-    view: '82k',
-  },
-  {
-    stoneCategory: 'Slate',
-    stoneColor: 'Onyx',
-    category: 'Interior',
-    view: '80k',
-  },
-  {
-    stoneCategory: 'Travertine',
-    stoneColor: 'Hedge Stone',
-    category: 'Fireplace',
-    view: '75k',
-  },
-  {
-    stoneCategory: 'Onyx',
-    stoneColor: 'Quartzite',
-    category: 'Interior',
-    view: '65k',
-  },
-  {
-    stoneCategory: 'Flint',
-    stoneColor: 'Gneiss',
-    category: 'Exterior',
-    view: '64k',
-  },
-  {
-    stoneCategory: 'Granite',
-    stoneColor: 'Marble',
-    category: 'Fireplace',
-    view: '35k',
-  },
-  {
-    stoneCategory: 'Gneiss',
-    stoneColor: 'Limestone',
-    category: 'Fireplace',
-    view: '15k',
-  },
-],
-)
+const items = ref([])
+
+// const items = ref([
+//   {
+//     stoneCategory: 'Hedge Stone',
+//     stoneColor: 'Brown',
+//     category: 'Exterior',
+//     view: '192k',
+//   },
+//   {
+//     stoneCategory: 'Stone Bricks',
+//     stoneColor: 'Marble',
+//     category: 'Interior',
+//     view: '129k',
+//   },
+//   {
+//     stoneCategory: 'Sandstone',
+//     stoneColor: 'Brown',
+//     category: 'Fireplace',
+//     view: '98k',
+//   },
+//   {
+//     stoneCategory: 'Quartzite',
+//     stoneColor: 'Basalt',
+//     category: 'Exterior',
+//     view: '82k',
+//   },
+//   {
+//     stoneCategory: 'Slate',
+//     stoneColor: 'Onyx',
+//     category: 'Interior',
+//     view: '80k',
+//   },
+//   {
+//     stoneCategory: 'Travertine',
+//     stoneColor: 'Hedge Stone',
+//     category: 'Fireplace',
+//     view: '75k',
+//   },
+//   {
+//     stoneCategory: 'Onyx',
+//     stoneColor: 'Quartzite',
+//     category: 'Interior',
+//     view: '65k',
+//   },
+//   {
+//     stoneCategory: 'Flint',
+//     stoneColor: 'Gneiss',
+//     category: 'Exterior',
+//     view: '64k',
+//   },
+//   {
+//     stoneCategory: 'Granite',
+//     stoneColor: 'Marble',
+//     category: 'Fireplace',
+//     view: '35k',
+//   },
+//   {
+//     stoneCategory: 'Gneiss',
+//     stoneColor: 'Limestone',
+//     category: 'Fireplace',
+//     view: '15k',
+//   },
+// ],
+// )
 
 const indexedItems = computed(() => {
   return items.value.map((item, index) => {
     return { ...item, index: index + 1 } // Add 1 to start the index at 1 instead of 0
   })
 })
+
+const fetch = async () => {
+  loading.value = true
+  try {
+    const response = await axiosIns.get('https://selkirkappapi.azurewebsites.net/api/analytics/stone-stats/')
+
+    items.value = response.data
+  }
+  catch (e) {
+    console.log(e)
+  }
+  finally {
+    loading.value = false
+  }
+}
+
+onMounted(() => {
+  fetch()
+})
 </script>
 
 <template>
-  <VCard>
+  <VCard :loading="loading">
     <VCardTitle class="d-flex align-center">
       <VCol>
         Ranking of Popular Stone Variant

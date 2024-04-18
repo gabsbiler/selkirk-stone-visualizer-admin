@@ -63,66 +63,27 @@ const formatNumber = num => {
 <template>
   <VCard title="Popularity Ranking">
     <VCardText>
-      <VTabs
-        v-model="selectedTab"
-        class="v-tabs-pill"
+      <VDataTable
+        :items="items"
+        :headers="headers"
+        items-per-page="5"
       >
-        <VTab
-          v-for="tab in tabs"
-          :key="tab"
-        >
-          {{ tab.title }}
-        </VTab>
-      </VTabs>
-      <hr class="my-3">
-      <VWindow v-model="selectedTab">
-        <VWindowItem key="By Stone Variant">
-          <VDataTable
-            :items="items"
-            :headers="headers"
-            items-per-page="5"
-          >
-            <template #item.visits="{ item }">
-              {{ formatNumber(item.props.title.visits) }}
-            </template>
+        <template #item.visits="{ item }">
+          {{ formatNumber(item.props.title.visits) }}
+        </template>
 
-            <template #item.dataInPercentage="{ item }">
-              <VProgressLinear
-                v-model="item.props.title.dataInPercentage"
-                color="primary"
-                height="20"
-              >
-                <template #default="{ value }">
-                  {{ Math.ceil(value) }}%
-                </template>
-              </VProgressLinear>
-            </template>
-          </VDataTable>
-        </VWindowItem>
-        <VWindowItem key="By Location">
-          <VDataTable
-            :items="items"
-            :headers="headers"
-            items-per-page="5"
+        <template #item.dataInPercentage="{ item }">
+          <VProgressLinear
+            v-model="item.props.title.dataInPercentage"
+            color="primary"
+            height="20"
           >
-            <template #item.visits="{ item }">
-              {{ formatNumber(item.props.title.visits) }}
+            <template #default="{ value }">
+              {{ Math.ceil(value) }}%
             </template>
-
-            <template #item.dataInPercentage="{ item }">
-              <VProgressLinear
-                v-model="item.props.title.dataInPercentage"
-                color="primary"
-                height="20"
-              >
-                <template #default="{ value }">
-                  {{ Math.ceil(value) }}%
-                </template>
-              </VProgressLinear>
-            </template>
-          </VDataTable>
-        </VWindowItem>
-      </VWindow>
+          </VProgressLinear>
+        </template>
+      </VDataTable>
     </VCardText>
   </VCard>
 </template>
