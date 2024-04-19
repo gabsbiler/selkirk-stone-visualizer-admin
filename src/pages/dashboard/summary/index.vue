@@ -2,6 +2,7 @@
 import PopularStoneVariant from '@/layouts/components/dashboard/productAnalysis/PopularStoneVariant.vue'
 import TopMostCollectedStoneVariant from '@/layouts/components/dashboard/summary/TopMostCollectedStoneVariant.vue'
 import TopMostPopularStoneVariant from '@/layouts/components/dashboard/summary/TopMostPopularStoneVariant.vue'
+import UserStatsCard from '@/layouts/components/dashboard/summary/UserStatsCard.vue'
 import axiosIns from '@/plugins/axios'
 
 const data = ref()
@@ -26,15 +27,9 @@ onMounted(() => {
   <section>
     <VRow>
       <!-- Users Statistic Card -->
-      <!--
-        <VCol
-        cols="12"
-        lg="5"
-        md="6"
-        >
+      <VCol cols="12">
         <UserStatsCard />
-        </VCol>
-      -->
+      </VCol>
       <!-- User Location Heatmap -->
       <!--
         <VCol
