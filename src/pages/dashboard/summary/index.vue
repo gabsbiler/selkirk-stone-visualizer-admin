@@ -1,7 +1,5 @@
 <script setup lang="ts">
 import PopularStoneVariant from '@/layouts/components/dashboard/productAnalysis/PopularStoneVariant.vue'
-import TopMostCollectedStoneVariant from '@/layouts/components/dashboard/summary/TopMostCollectedStoneVariant.vue'
-import TopMostPopularStoneVariant from '@/layouts/components/dashboard/summary/TopMostPopularStoneVariant.vue'
 import UserStatsCard from '@/layouts/components/dashboard/summary/UserStatsCard.vue'
 import axiosIns from '@/plugins/axios'
 
@@ -40,21 +38,24 @@ onMounted(() => {
         <UserLocHeatmap />
         </VCol>
       -->
+
       <VCol cols="12">
         <PopularStoneVariant />
       </VCol>
-      <VCol
+      <!--
+        <VCol
         cols="12"
         md="6"
-      >
+        >
         <TopMostPopularStoneVariant />
-      </VCol>
-      <VCol
+        </VCol>
+        <VCol
         cols="12"
         md="6"
-      >
+        >
         <TopMostCollectedStoneVariant />
-      </VCol>
+        </VCol>
+      -->
     </VRow>
   </section>
 </template>

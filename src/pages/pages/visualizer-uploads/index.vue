@@ -3,7 +3,7 @@ import { VDataTable } from 'vuetify/labs/VDataTable'
 import axiosIns from '@/plugins/axios'
 
 const headers = [
-  { title: 'ID', key: 'id' },
+  { title: 'ID', key: 'id', sortable: false },
   { title: 'Uploads', key: 'raw_image' },
   { title: 'Visualized', key: 'edited_image' },
   { title: 'Date Uploaded', key: 'uploaded_at' },
@@ -17,7 +17,8 @@ const fetchData = async () => {
   try {
     const response = await axiosIns.get('/viz-image/images/')
 
-    data.value = response.data
+    data.value = response.data.reverse()
+
     console.log(response.data)
   }
   catch (e) {

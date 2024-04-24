@@ -7,7 +7,7 @@ const loading = ref(true)
 
 const header = [
   { title: 'No', key: 'rank', sortable: false },
-  { title: 'Stone Category', key: 'stone_category' },
+  { title: 'Stone Profile', key: 'stone_category' },
   { title: 'Stone Color', key: 'stone_color' },
   { title: 'Count', key: 'count' },
 ]
