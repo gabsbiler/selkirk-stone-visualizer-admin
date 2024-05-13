@@ -14,7 +14,7 @@ const loading = ref(false)
 const fetch = async () => {
   loading.value = true
   try {
-    const response = await axiosIns.get('https://selkirkappapi.azurewebsites.net/api/analytics/user-stats')
+    const response = await axiosIns.get('https://selkirkappapi-staging.azurewebsites.net/api/analytics/user-stats')
 
     users_per_month.value = response.data.users_per_month
     users_per_week.value = response.data.users_per_week

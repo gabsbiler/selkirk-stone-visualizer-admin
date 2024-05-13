@@ -87,7 +87,7 @@ const indexedItems = computed(() => {
 const fetch = async () => {
   loading.value = true
   try {
-    const response = await axiosIns.get('https://selkirkappapi.azurewebsites.net/api/analytics/stone-stats/')
+    const response = await axiosIns.get('https://selkirkappapi-staging.azurewebsites.net/api/analytics/stone-stats/')
 
     items.value = response.data
   }

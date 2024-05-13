@@ -77,7 +77,7 @@ const updateBanner = async (id, count) => {
         return base64
       })
 
-      const response = await axios.patch(`https://selkirkappapi.azurewebsites.net/api/contents/section3/${data.value.id}/add_banner_photo/`, {
+      const response = await axios.patch(`https://selkirkappapi-staging.azurewebsites.net/api/contents/section3/${data.value.id}/add_banner_photo/`, {
         photo: banner_,
       })
 
@@ -96,7 +96,7 @@ const updateBanner = async (id, count) => {
         return base64
       })
 
-      const response = await axios.patch(`https://selkirkappapi.azurewebsites.net/api/contents/section3/${data.value.id}/update_banner_photo/`, {
+      const response = await axios.patch(`https://selkirkappapi-staging.azurewebsites.net/api/contents/section3/${data.value.id}/update_banner_photo/`, {
         banner_photo_id: id,
         photo: banner_,
       })
@@ -117,7 +117,7 @@ const deleteBanner = async id => {
   LoadingRef.value.triggerDialog(true)
   console.log(id)
   try {
-    const response = await axios.delete(`https://selkirkappapi.azurewebsites.net/api/contents/section3/${data.value.id}/delete_banner_photo/`, {
+    const response = await axios.delete(`https://selkirkappapi-staging.azurewebsites.net/api/contents/section3/${data.value.id}/delete_banner_photo/`, {
       headers: {
         'Content-Type': 'application/json',
       },

@@ -7,7 +7,7 @@ const data = ref()
 
 const fetch = async () => {
   try {
-    const response = await axiosIns.get('https://selkirkappapi.azurewebsites.net/api/analytics/aggregate/')
+    const response = await axiosIns.get('https://selkirkappapi-staging.azurewebsites.net/api/analytics/aggregate/')
 
     data.value = response.data
   }
