@@ -8,8 +8,8 @@ import Section4 from '@/layouts/components/content/Section4.vue'
 
 <template>
   <div class="d-flex gap-y-5 flex-column">
-    <Login />
-    <Signup />
+    <!-- <Login /> -->
+    <!-- <Signup /> -->
     <Section1 />
     <Section2 />
     <Section3 />
