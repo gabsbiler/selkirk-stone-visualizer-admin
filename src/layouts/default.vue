@@ -18,6 +18,10 @@ switchToVerticalNavOnLtOverlayNavBreakpoint(windowWidth)
 const { layoutAttrs, injectSkinClasses } = useSkins()
 
 injectSkinClasses()
+
+const router = useRouter()
+if (sessionStorage.getItem('userAbilities') === null)
+  router.push('/login')
 </script>
 
 <template>
