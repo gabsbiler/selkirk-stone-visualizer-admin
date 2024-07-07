@@ -172,7 +172,6 @@ watch(isVerticalNavMini(windowWidth, isVerticalNavHovered), val => {
 
 <template>
   <li
-    v-if="canViewNavMenuGroup(item)"
     class="nav-group"
     :class="[
       {
