@@ -1,7 +1,6 @@
 <script lang="ts" setup>
 import { useLayouts } from '@layouts'
 import { config } from '@layouts/config'
-import { can } from '@layouts/plugins/casl'
 import type { NavSectionTitle } from '@layouts/types'
 
 defineProps<{
@@ -15,7 +14,6 @@ const shallRenderIcon = isVerticalNavMini(windowWidth)
 
 <template>
   <li
-    v-if="can(item.action, item.subject)"
     class="nav-section-title"
   >
     <div class="title-wrapper">
