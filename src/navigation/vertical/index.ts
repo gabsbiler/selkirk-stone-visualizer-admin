@@ -50,6 +50,33 @@ export default [
     subject: 'content_management',
   },
   {
+    title: 'Sample Scenes',
+    icon: { icon: 'bx-window' },
+    action: 'Access',
+    subject: 'sample_scenes',
+
+    children: [
+      {
+        title: 'Exterior',
+        to: 'sample-scenes-exterior',
+        action: 'Access',
+        subject: 'sample_scenes',
+      },
+      {
+        title: 'Interior',
+        to: 'sample-scenes-interior',
+        action: 'Access',
+        subject: 'sample_scenes',
+      },
+      {
+        title: 'Non-Combustible Mantle',
+        to: 'sample-scenes-non-combustible-mantle',
+        action: 'Access',
+        subject: 'sample_scenes',
+      },
+    ],
+  },
+  {
     title: 'Permission',
     to: { name: 'pages-permission' },
     icon: { icon: 'bx-lock' },
