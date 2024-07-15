@@ -3,16 +3,13 @@ import SnackBar from '@/layouts/components/SnackBar.vue'
 import axios from '@axios'
 import { VDataTable } from 'vuetify/labs/VDataTable'
 
-const props = defineProps<{
-  type: string
-}>()
-
-const { type } = toRefs(props)
 const data = ref([])
 const headers = ref([
     { title: 'Id', key: 'id' },
     { title: 'Image', key: 'image', sortable: false },
-    { title: 'Hover', key: 'hover', sortable: false },
+    { title: 'Name', key: 'name', sortable: false },
+    { title: 'Status', key: 'status', sortable: false },
+    { title: 'Is In Stock', key: 'isInStock', sortable: false },
     { title: 'Actions', key: 'actions', align: 'end', sortable: false },
 ])
 
@@ -25,15 +22,9 @@ const snackbarRef = ref(null)
 const loading = ref(true)
 
 const imageFile = ref()
-const hoverFile = ref()
 
 const fetchData = async () => {
-  let url = null
-  if (type.value === 'exterior') url = '/sample_scenes/sample-exterior'
-  else if (type.value === 'interior') url = '/sample_scenes/sample-interior'
-  else if (type.value === 'mantle') url = '/sample_scenes/sample-mantle'
-
-  const response = await axios.get(url)
+  const response = await axios.get('products/products/')
 
   data.value = response.data
   
@@ -41,10 +32,9 @@ const fetchData = async () => {
 }
 
 const showEditDialog = (editedItem) => {
-  item.value = editedItem ? JSON.parse(JSON.stringify(editedItem)) : {}
+  item.value = editedItem ? JSON.parse(JSON.stringify(editedItem)) : { status: true, isInStock: true }
   dialog.value = !dialog.value
   imageFile.value = null
-  hoverFile.value = null
 }
 
 const confirmDeleteItem = (item) => {
@@ -57,11 +47,7 @@ const deleteItem = async () => {
   loading.value = true
 
   try {
-    let url = null
-    if (type.value === 'exterior') url = '/sample_scenes/sample-exterior'
-    else if (type.value === 'interior') url = '/sample_scenes/sample-interior'
-    else if (type.value === 'mantle') url = '/sample_scenes/sample-mantle'
-    const res = await axios.delete(`${url}/${deletedItem.value.id}`)
+    const res = await axios.delete(`/products/products/${deletedItem.value.id}`)
 
     if (snackbarRef.value && (res.status === 200 || res.status === 204)) {
       const index = data.value.map(x => x.id).indexOf(deletedItem.value.id)
@@ -70,7 +56,7 @@ const deleteItem = async () => {
         items.splice(index, 1)
         data.value = items
       }
-      snackbarRef.value.show('success', `Successfully deleted ${type.value} #${deletedItem.value.id}.`)
+      snackbarRef.value.show('success', `Successfully deleted profile #${deletedItem.value.id}.`)
     }
 
     loading.value = false
@@ -89,18 +75,15 @@ const saveItem = async () => {
 
   const formData = new FormData()
 
-  if (imageFile.value)
-    formData.append('image', imageFile.value[0])
-
-  if (hoverFile.value)
-    formData.append('hover', hoverFile.value[0])
+  if (imageFile.value) formData.append('image', imageFile.value[0])
+  
+  formData.append('name', item.value.name)
+  formData.append('status', item.value.status)
+  formData.append('isInStock', item.value.isInStock)
 
   try {
     let method = "post"
-    let url = null
-    if (type.value === 'exterior') url = '/sample_scenes/sample-exterior/'
-    else if (type.value === 'interior') url = '/sample_scenes/sample-interior/'
-    else if (type.value === 'mantle') url = '/sample_scenes/sample-mantle/'
+    let url = '/products/products/'
     if (item.value.id) {
       method = "patch"
       url += `${item.value.id}/` 
@@ -118,7 +101,7 @@ const saveItem = async () => {
       if (index > -1) items[index] = res.data
       else items.push(res.data)
       data.value = items
-      snackbarRef.value.show('success', `Successfully saved ${type.value} #${res.data.id}.`)
+      snackbarRef.value.show('success', `Successfully saved profile #${res.data.id}.`)
     }
   }
   catch (error) {
@@ -143,22 +126,22 @@ onMounted(() => {
           <template v-slot:activator="{ on }">
             <div class="d-flex align-end justify-space-between">
               <h6 class="text-h6 text-primary mb-3">
-                {{ type[0].toUpperCase() + type.slice(1) }}
+                Profile
               </h6>
               <VBtn color="primary" dark class="ml-auto ma-3" @click="showEditDialog()" v-bind:disabled="loading">
-                  New {{ type[0].toUpperCase() + type.slice(1) }}
+                  New Profile
                   <VIcon small>mdi-plus-circle-outline</VIcon>
               </VBtn>
             </div>
           </template>
           <VCard>
             <VCardTitle>
-                <span v-if="item.id">Edit {{ type[0].toUpperCase() + type.slice(1) }} #{{item.id}}</span>
-                <span v-else>Create {{ type[0].toUpperCase() + type.slice(1) }}</span>
+                <span v-if="item.id">Edit Profile #{{item.id}}</span>
+                <span v-else>Create Profile</span>
             </VCardTitle>
             <VCardText>
                 <VRow>
-                  <VCol cols="612">
+                  <VCol cols="12">
                     <VFileInput
                       v-model="imageFile"
                       label="Image"
@@ -166,11 +149,24 @@ onMounted(() => {
                     />
                   </VCol>
                   <VCol cols="12">
-                    <VFileInput
-                      v-model="hoverFile"
-                      label="Hover"
-                      accept="image/*"
+                    <VTextField
+                      v-model="item.name"
+                      label="Name"
                     />
+                  </VCol>
+                  <VCol cols="12">
+                    <VSelect
+                      v-model="item.status"
+                      label="Select Status"
+                      :items="[{ title: 'Active', value: true }, { title: 'Inactive', value: false }]"
+                    ></VSelect>
+                  </VCol>
+                  <VCol cols="12">
+                    <VSelect
+                      v-model="item.isInStock"
+                      label="Is In Stock?"
+                      :items="[{ title: 'Yes', value: true }, { title: 'No', value: false }]"
+                    ></VSelect>
                   </VCol>
                 </VRow>
             </VCardText>
@@ -184,9 +180,9 @@ onMounted(() => {
         <VDialog v-model="deleteDialog" max-width="500px">
           <VCard>
             <VCardTitle>
-                <span v-if="deletedItem">Delete {{ type[0].toUpperCase() + type.slice(1) }}</span>
+                <span v-if="deletedItem">Delete Profile</span>
             </VCardTitle>
-            <VCardText v-if="deletedItem">Are you sure you want to delete {{ type[0].toUpperCase() + type.slice(1) }} #{{deletedItem.id}}?</VCardText>
+            <VCardText v-if="deletedItem">Are you sure you want to delete Profile #{{deletedItem.id}}?</VCardText>
             <VCardActions>
               <VSpacer></VSpacer>
               <VBtn color="default" variant="flat" @click="confirmDeleteItem()">Cancel</VBtn>
@@ -204,7 +200,7 @@ onMounted(() => {
                 <VBtn
                   small
                   class="mr-2"
-                  :href="'/sample-scenes/' + type + '/' + item.props.title.id"
+                  :href="'/products/profile/' + item.props.title.id"
                   color="secondary" size="small"
                   v-bind:disabled="loading"
                 >
@@ -231,6 +227,12 @@ onMounted(() => {
           </template>
           <template v-slot:item.id="{ item }">
               #{{ item.props.title.id }}
+          </template>
+          <template v-slot:item.status="{ item }">
+              {{ item.props.title.status ? "Active" : "Inactive" }}
+          </template>
+          <template v-slot:item.isInStock="{ item }">
+              {{ item.props.title.isInStock ? "Yes" : "No" }}
           </template>
           <template v-slot:item.image="{ item }">
               <img v-bind:src="item.props.title.image" style="block-size: 100px; inline-size: auto;" />

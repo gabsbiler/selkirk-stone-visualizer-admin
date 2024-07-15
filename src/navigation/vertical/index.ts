@@ -50,6 +50,27 @@ export default [
     subject: 'content_management',
   },
   {
+    title: 'Products',
+    icon: { icon: 'mdi-view-list' },
+    action: 'Access',
+    subject: 'products',
+
+    children: [
+      {
+        title: 'Profile',
+        to: 'products-profile',
+        action: 'Access',
+        subject: 'products',
+      },
+      {
+        title: 'Color',
+        to: 'products-color',
+        action: 'Access',
+        subject: 'products'
+      },
+    ],
+  },
+  {
     title: 'Sample Scenes',
     icon: { icon: 'bx-window' },
     action: 'Access',
@@ -70,7 +91,7 @@ export default [
       },
       {
         title: 'Non-Combustible Mantle',
-        to: 'sample-scenes-non-combustible-mantle',
+        to: 'sample-scenes-mantle',
         action: 'Access',
         subject: 'sample_scenes',
       },

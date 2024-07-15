@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import SampleSceneVariantsTable from '@/layouts/components/sample-scenes/SampleSceneVariantsTable.vue';
-const type = ref("mantel")
+const type = ref("mantle")
 </script>
 
 <template>
