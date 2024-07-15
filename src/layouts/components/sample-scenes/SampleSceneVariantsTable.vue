@@ -53,7 +53,7 @@ const fetchData = async () => {
 }
 
 const showEditDialog = (editedItem) => {
-  item.value = editedItem || { scene_id: props.id, category: type.value[0].toUpperCase() + type.value.slice(1) }
+  item.value = editedItem ? JSON.parse(JSON.stringify(editedItem)) : { scene_id: props.id, category: type.value[0].toUpperCase() + type.value.slice(1) }
   dialog.value = !dialog.value
   imageFile.value = null
   hoverFile.value = null
@@ -181,18 +181,25 @@ onMounted(() => {
               </VCardTitle>
               <VCardText>
                   <VRow>
-                    <VCol cols="12">
+                    <VCol cols="12" v-if="type !== 'mantle'">
                       <VSelect
                         v-model="item.variant_name"
                         label="Select Profile"
                         :items="products.map(x => x.name).sort()"
                       ></VSelect>
                     </VCol>
-                    <VCol cols="12">
+                    <VCol cols="12" v-if="type !== 'mantle'">
                       <VSelect
                         v-model="item.color"
                         label="Select Color"
                         :items="products.find(x => x.name === item.variant_name)?.colors.map(x => x.name).sort()"
+                      ></VSelect>
+                    </VCol>
+                    <VCol cols="12" v-else>
+                      <VSelect
+                        v-model="item.color"
+                        label="Select Color"
+                        :items="products.filter(x => x.product_parent_id === 2000).map(x => x.name).sort()"
                       ></VSelect>
                     </VCol>
                     <VCol cols="612">
@@ -212,7 +219,7 @@ onMounted(() => {
             </VCard>
           </VDialog>
         </VCardText>
-        <VTabs v-model="tab">
+        <VTabs v-model="tab" v-if="type !== 'mantle'">
           <VTab v-for="(variant, index) in Object.keys(sampleScene.variants)" :key="index" :value="variant">{{ variant }}</VTab>
         </VTabs>
         <VCardText class="d-flex flex-column">
@@ -229,13 +236,12 @@ onMounted(() => {
               </VCardActions>
             </VCard>
           </VDialog>
-          <VWindow v-model="tab">
-            <VWindowItem v-for="(variant, index) in Object.keys(sampleScene.variants)" :key="index" :value="variant">
-              <VDataTable
-                :headers="headers" 
-                :items="sampleScene.variants[variant]" 
-                mobile-breakpoint="800"
-                class="elevation-0">
+          <template v-if="type === 'mantle'">
+            <VDataTable
+              :headers="headers" 
+              :items="sampleScene.variants['colors']" 
+              mobile-breakpoint="800"
+              class="elevation-0">
               <template v-slot:item.actions="{ item }">
                   <div class="text-truncate">
                     <VBtn
@@ -261,15 +267,57 @@ onMounted(() => {
                   #{{ item.props.title.id }}
               </template>
               <template v-slot:item.color="{ item }">
-                  <img v-bind:src="products.find(x => x.name === item.props.title.variant_name)?.colors?.find(x => x.name === item.props.title.color)?.image" style="block-size: 100px; inline-size: auto;" />
+                  <img v-bind:src="products.find(x => x.name === item.props.title.color)?.image" style="block-size: 100px; inline-size: auto;" />
                   {{ item.props.title.color }}
               </template>
               <template v-slot:item.image="{ item }">
                   <img v-bind:src="item.props.title.image" style="block-size: 100px; inline-size: auto;" />
               </template>
             </VDataTable>
-            </VWindowItem>
-          </VWindow>
+          </template>
+          <template v-else>
+            <VWindow v-model="tab">
+              <VWindowItem v-for="(variant, index) in Object.keys(sampleScene.variants)" :key="index" :value="variant">
+                <VDataTable
+                  :headers="headers" 
+                  :items="sampleScene.variants[variant]" 
+                  mobile-breakpoint="800"
+                  class="elevation-0">
+                  <template v-slot:item.actions="{ item }">
+                      <div class="text-truncate">
+                        <VBtn
+                          small
+                          class="mr-2"
+                          @click="showEditDialog(item.props.title)"
+                          color="primary" size="small"
+                          v-bind:disabled="loading"
+                        >
+                        <VIcon>mdi-pencil</VIcon>
+                        </VBtn>
+                        <VBtn
+                          small
+                          @click="confirmDeleteItem(item.props.title)"
+                          color="error" size="small"
+                          v-bind:disabled="loading"
+                        >
+                          <VIcon>mdi-delete</VIcon>
+                        </VBtn>
+                    </div>
+                  </template>
+                  <template v-slot:item.id="{ item }">
+                      #{{ item.props.title.id }}
+                  </template>
+                  <template v-slot:item.color="{ item }">
+                      <img v-bind:src="products.find(x => x.name === item.props.title.variant_name)?.colors?.find(x => x.name === item.props.title.color)?.image" style="block-size: 100px; inline-size: auto;" />
+                      {{ item.props.title.color }}
+                  </template>
+                  <template v-slot:item.image="{ item }">
+                      <img v-bind:src="item.props.title.image" style="block-size: 100px; inline-size: auto;" />
+                  </template>
+                </VDataTable>
+              </VWindowItem>
+            </VWindow>
+          </template>
         </VCardText>
     </VCard>
   </section>
