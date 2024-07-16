@@ -31,7 +31,7 @@ const fetchData = async () => {
   let url = null
   if (type.value === 'exterior') url = '/sample_scenes/sample-exterior'
   else if (type.value === 'interior') url = '/sample_scenes/sample-interior'
-  else if (type.value === 'mantle') url = '/sample_scenes/sample-mantle'
+  else if (type.value === 'mantel') url = '/sample_scenes/sample-mantle'
 
   const response = await axios.get(url)
 
@@ -60,7 +60,7 @@ const deleteItem = async () => {
     let url = null
     if (type.value === 'exterior') url = '/sample_scenes/sample-exterior'
     else if (type.value === 'interior') url = '/sample_scenes/sample-interior'
-    else if (type.value === 'mantle') url = '/sample_scenes/sample-mantle'
+    else if (type.value === 'mantel') url = '/sample_scenes/sample-mantle'
     const res = await axios.delete(`${url}/${deletedItem.value.id}`)
 
     if (snackbarRef.value && (res.status === 200 || res.status === 204)) {
@@ -100,7 +100,7 @@ const saveItem = async () => {
     let url = null
     if (type.value === 'exterior') url = '/sample_scenes/sample-exterior/'
     else if (type.value === 'interior') url = '/sample_scenes/sample-interior/'
-    else if (type.value === 'mantle') url = '/sample_scenes/sample-mantle/'
+    else if (type.value === 'mantel') url = '/sample_scenes/sample-mantle/'
     if (item.value.id) {
       method = "patch"
       url += `${item.value.id}/` 
