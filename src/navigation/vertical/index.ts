@@ -57,14 +57,14 @@ export default [
 
     children: [
       {
-        title: 'Profile',
-        to: 'products-profile',
+        title: 'Stone',
+        to: 'products-stone',
         action: 'Access',
         subject: 'products',
       },
       {
-        title: 'Color',
-        to: 'products-color',
+        title: 'Mantel',
+        to: 'products-mantel',
         action: 'Access',
         subject: 'products'
       },
@@ -90,8 +90,8 @@ export default [
         subject: 'sample_scenes',
       },
       {
-        title: 'Non-Combustible Mantle',
-        to: 'sample-scenes-mantle',
+        title: 'Non-Combustible Mantel',
+        to: 'sample-scenes-mantel',
         action: 'Access',
         subject: 'sample_scenes',
       },

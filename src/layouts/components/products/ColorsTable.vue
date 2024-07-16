@@ -120,8 +120,8 @@ onMounted(() => {
   fetchData()
   
   breadcrumbs.value = [{
-    title: "Profile",
-    href: "/products/profile",
+    title: "Stone",
+    href: "/products/stone",
     disabled: false
   }, {
     title: "Colors",
@@ -143,18 +143,25 @@ onMounted(() => {
             <div class="d-flex align-end justify-space-between">
               <h6 class="text-h6 text-primary mb-3">
                 <VBreadcrumbs v-if="props.id != '2000'" class="pa-0" :items="breadcrumbs"></VBreadcrumbs>
-                <span v-else>Color</span>
+                <span v-else>Mantel</span>
               </h6>
               <VBtn color="primary" dark class="ml-auto ma-3" @click="showEditDialog()" v-bind:disabled="loading">
-                  New Color
+                  <span v-if="props.id != '2000'">New Color</span>
+                  <span v-else>New Mantel</span>
                   <VIcon small>mdi-plus-circle-outline</VIcon>
               </VBtn>
             </div>
           </template>
           <VCard>
             <VCardTitle>
-                <span v-if="item.id">Edit Color #{{item.id}}</span>
-                <span v-else>Create Color</span>
+                <span v-if="props.id != '2000'">
+                  <span v-if="item.id">Edit Color #{{item.id}}</span>
+                  <span v-else>Create Color</span>
+                </span>
+                <span v-else>
+                  <span v-if="item.id">Edit Mantel #{{item.id}}</span>
+                  <span v-else>Create Mantel</span>
+                </span>
             </VCardTitle>
             <VCardText>
                 <VRow>
@@ -190,9 +197,15 @@ onMounted(() => {
         <VDialog v-model="deleteDialog" max-width="500px">
           <VCard>
             <VCardTitle>
-                <span v-if="deletedItem">Delete Color</span>
+                <span v-if="deletedItem">
+                  <span v-if="props.id != '2000'">Delete Color</span>
+                  <span v-else>Delete Mantel</span>
+                </span>
             </VCardTitle>
-            <VCardText v-if="deletedItem">Are you sure you want to delete Color #{{deletedItem.id}}?</VCardText>
+            <VCardText v-if="deletedItem">
+                <span v-if="props.id != '2000'">Are you sure you want to delete Color #{{deletedItem.id}}?</span>
+                <span v-else>Are you sure you want to delete Mantel #{{deletedItem.id}}?</span>
+            </VCardText>
             <VCardActions>
               <VSpacer></VSpacer>
               <VBtn color="default" variant="flat" @click="confirmDeleteItem()">Cancel</VBtn>

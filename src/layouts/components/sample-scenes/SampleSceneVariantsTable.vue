@@ -33,7 +33,7 @@ const imageFile = ref()
 const fetchData = async () => {
   let productsUrl = null
   if (type.value === 'exterior' || type.value === 'interior') productsUrl = `/products/products/`
-  else if (type.value === 'mantle') productsUrl = `/products/colors/`
+  else if (type.value === 'mantel') productsUrl = `/products/colors/`
 
   const productsResponse = await axios.get(productsUrl)
   products.value = productsResponse.data
@@ -41,7 +41,7 @@ const fetchData = async () => {
   let url = null
   if (type.value === 'exterior') url = `/sample_scenes/sample-exterior/${props.id}`
   else if (type.value === 'interior') url = `/sample_scenes/sample-interior/${props.id}`
-  else if (type.value === 'mantle') url = `/sample_scenes/sample-mantle/${props.id}`
+  else if (type.value === 'mantel') url = `/sample_scenes/sample-mantle/${props.id}`
 
   const response = await axios.get(url)
 
@@ -140,14 +140,11 @@ const saveItem = async () => {
 onMounted(() => {
   fetchData()
   
-  var parentBreadcrumb = {
+  breadcrumbs.value = [{
     title: type.value[0].toUpperCase() + type.value.slice(1),
+    href: `/sample-scenes/${type.value}`,
     disabled: false
-  }
-  if (type.value === 'exterior') parentBreadcrumb.href = '/sample-scenes/exterior'
-  else if (type.value === 'interior') parentBreadcrumb.href = '/sample-scenes/interior'
-  else if (type.value === 'mantle') parentBreadcrumb.href = '/sample-scenes/non-combustible-mantle'
-  breadcrumbs.value = [parentBreadcrumb, {
+  }, {
     title: "Variants",
     disabled: true
   }, {
@@ -181,14 +178,14 @@ onMounted(() => {
               </VCardTitle>
               <VCardText>
                   <VRow>
-                    <VCol cols="12" v-if="type !== 'mantle'">
+                    <VCol cols="12" v-if="type !== 'mantel'">
                       <VSelect
                         v-model="item.variant_name"
                         label="Select Profile"
                         :items="products.map(x => x.name).sort()"
                       ></VSelect>
                     </VCol>
-                    <VCol cols="12" v-if="type !== 'mantle'">
+                    <VCol cols="12" v-if="type !== 'mantel'">
                       <VSelect
                         v-model="item.color"
                         label="Select Color"
@@ -219,7 +216,7 @@ onMounted(() => {
             </VCard>
           </VDialog>
         </VCardText>
-        <VTabs v-model="tab" v-if="type !== 'mantle'">
+        <VTabs v-model="tab" v-if="type !== 'mantel'">
           <VTab v-for="(variant, index) in Object.keys(sampleScene.variants)" :key="index" :value="variant">{{ variant }}</VTab>
         </VTabs>
         <VCardText class="d-flex flex-column">
@@ -236,7 +233,7 @@ onMounted(() => {
               </VCardActions>
             </VCard>
           </VDialog>
-          <template v-if="type === 'mantle'">
+          <template v-if="type === 'mantel'">
             <VDataTable
               :headers="headers" 
               :items="sampleScene.variants['colors']" 

@@ -56,7 +56,7 @@ const deleteItem = async () => {
         items.splice(index, 1)
         data.value = items
       }
-      snackbarRef.value.show('success', `Successfully deleted profile #${deletedItem.value.id}.`)
+      snackbarRef.value.show('success', `Successfully deleted stone #${deletedItem.value.id}.`)
     }
 
     loading.value = false
@@ -101,7 +101,7 @@ const saveItem = async () => {
       if (index > -1) items[index] = res.data
       else items.push(res.data)
       data.value = items
-      snackbarRef.value.show('success', `Successfully saved profile #${res.data.id}.`)
+      snackbarRef.value.show('success', `Successfully saved stone #${res.data.id}.`)
     }
   }
   catch (error) {
@@ -126,18 +126,18 @@ onMounted(() => {
           <template v-slot:activator="{ on }">
             <div class="d-flex align-end justify-space-between">
               <h6 class="text-h6 text-primary mb-3">
-                Profile
+                Stone
               </h6>
               <VBtn color="primary" dark class="ml-auto ma-3" @click="showEditDialog()" v-bind:disabled="loading">
-                  New Profile
+                  New Stone
                   <VIcon small>mdi-plus-circle-outline</VIcon>
               </VBtn>
             </div>
           </template>
           <VCard>
             <VCardTitle>
-                <span v-if="item.id">Edit Profile #{{item.id}}</span>
-                <span v-else>Create Profile</span>
+                <span v-if="item.id">Edit Stone #{{item.id}}</span>
+                <span v-else>Create Stone</span>
             </VCardTitle>
             <VCardText>
                 <VRow>
@@ -180,9 +180,9 @@ onMounted(() => {
         <VDialog v-model="deleteDialog" max-width="500px">
           <VCard>
             <VCardTitle>
-                <span v-if="deletedItem">Delete Profile</span>
+                <span v-if="deletedItem">Delete Stone</span>
             </VCardTitle>
-            <VCardText v-if="deletedItem">Are you sure you want to delete Profile #{{deletedItem.id}}?</VCardText>
+            <VCardText v-if="deletedItem">Are you sure you want to delete Stone #{{deletedItem.id}}?</VCardText>
             <VCardActions>
               <VSpacer></VSpacer>
               <VBtn color="default" variant="flat" @click="confirmDeleteItem()">Cancel</VBtn>
@@ -200,7 +200,7 @@ onMounted(() => {
                 <VBtn
                   small
                   class="mr-2"
-                  :href="'/products/profile/' + item.props.title.id"
+                  :href="'/products/stone/' + item.props.title.id"
                   color="secondary" size="small"
                   v-bind:disabled="loading"
                 >
