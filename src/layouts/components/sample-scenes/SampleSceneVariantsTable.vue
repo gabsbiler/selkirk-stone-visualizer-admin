@@ -54,6 +54,7 @@ const fetchData = async () => {
 
 const showEditDialog = (editedItem) => {
   item.value = editedItem ? JSON.parse(JSON.stringify(editedItem)) : { scene_id: props.id, category: type.value[0].toUpperCase() + type.value.slice(1) }
+  if (type.value === 'mantel') item.value.variant_name = 'colors'
   dialog.value = !dialog.value
   imageFile.value = null
   hoverFile.value = null
