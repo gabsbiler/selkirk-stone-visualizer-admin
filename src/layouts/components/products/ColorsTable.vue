@@ -12,6 +12,7 @@ const breadcrumbs = ref([])
 const headers = ref([
     { title: 'Id', key: 'id' },
     { title: 'Image', key: 'image', sortable: false },
+    { title: 'Thumbnail', key: 'image_thumbnail', sortable: false },
     { title: 'Name', key: 'name', sortable: false },
     { title: 'Is Available', key: 'is_available', sortable: false },
     { title: 'Actions', key: 'actions', align: 'end', sortable: false },
@@ -26,6 +27,7 @@ const snackbarRef = ref(null)
 const loading = ref(true)
 
 const imageFile = ref()
+const thumbnailFile = ref()
 
 const fetchData = async () => {
   const response = await axios.get('products/colors/')
@@ -39,6 +41,7 @@ const showEditDialog = (editedItem) => {
   item.value = editedItem ? JSON.parse(JSON.stringify(editedItem)) : { product_parent_id: parseInt(props.id), is_available: true }
   dialog.value = !dialog.value
   imageFile.value = null
+  thumbnailFile.value = null
 }
 
 const confirmDeleteItem = (item) => {
@@ -80,6 +83,7 @@ const saveItem = async () => {
   const formData = new FormData()
 
   if (imageFile.value) formData.append('image', imageFile.value[0])
+  if (thumbnailFile.value) formData.append('thumbnail', thumbnailFile.value[0])
   
   formData.append('product_parent_id', item.value.product_parent_id)
   formData.append('name', item.value.name)
@@ -173,6 +177,13 @@ onMounted(() => {
                     />
                   </VCol>
                   <VCol cols="12">
+                    <VFileInput
+                      v-model="thumbnailFile"
+                      label="Thumbnail"
+                      accept="image/*"
+                    />
+                  </VCol>
+                  <VCol cols="12">
                     <VTextField
                       v-model="item.name"
                       label="Name"
@@ -248,8 +259,8 @@ onMounted(() => {
           <template v-slot:item.image="{ item }">
               <img v-bind:src="item.props.title.image" style="block-size: 100px; inline-size: auto;" />
           </template>
-          <template v-slot:item.hover="{ item }">
-              <img v-bind:src="item.props.title.hover" style="block-size: 100px; inline-size: auto;" />
+          <template v-slot:item.image_thumbnail="{ item }">
+              <img v-bind:src="item.props.title.image_thumbnail" style="block-size: 100px; inline-size: auto;" />
           </template>
         </VDataTable>
       </VCardText>
