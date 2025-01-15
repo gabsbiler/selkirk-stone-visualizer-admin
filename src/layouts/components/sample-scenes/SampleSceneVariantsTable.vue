@@ -1,7 +1,7 @@
 <script setup lang="ts">
-import SnackBar from '@/layouts/components/SnackBar.vue'
-import axios from '@axios'
-import { VDataTable } from 'vuetify/labs/VDataTable'
+import SnackBar from '@/layouts/components/SnackBar.vue';
+import axios from '@axios';
+import { VDataTable } from 'vuetify/components';
 
 const props = defineProps<{
   type: string,

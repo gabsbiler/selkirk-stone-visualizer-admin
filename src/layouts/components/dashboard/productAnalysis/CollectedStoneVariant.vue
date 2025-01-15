@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { VDataTable } from 'vuetify/labs/VDataTable'
+import { VDataTable } from 'vuetify/components';
 
 const search = ref()
 

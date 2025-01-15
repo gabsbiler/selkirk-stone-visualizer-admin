@@ -1,9 +1,32 @@
 <script setup lang="ts">
-import { VDataTable } from 'vuetify/labs/VDataTable'
 import axiosIns from '@/plugins/axios'
+import { VDataTable } from 'vuetify/components'
+import { VDateInput } from 'vuetify/labs/VDateInput'
 
 const search = ref()
+const dateRange = ref()
 const loading = ref(true)
+
+const getDefaultDateRange = () => {
+  const start = new Date()
+  start.setHours(0, 0, 0, 0)
+  start.setDate(start.getDate() - 30)
+  const end = new Date(start.getTime())
+  end.setDate(end.getDate() + 30)
+  var range = []
+  while (start <= end) {
+    range.push(new Date(start))
+    start.setDate(start.getDate() + 1)
+  }
+  return range
+}
+
+const dateWithoutTimezone = (date, additionalDays) => {
+  const tzoffset = date.getTimezoneOffset() * 60000
+  const withoutTimezoneDate = new Date(date.valueOf() - tzoffset)
+  if (additionalDays) withoutTimezoneDate.setDate(withoutTimezoneDate.getDate() + additionalDays)
+  return withoutTimezoneDate.toISOString().slice(0, -1)
+}
 
 const header = [
   { title: 'No', key: 'rank', sortable: false },
@@ -14,70 +37,6 @@ const header = [
 
 const items = ref([])
 
-// const items = ref([
-//   {
-//     stoneCategory: 'Hedge Stone',
-//     stoneColor: 'Brown',
-//     category: 'Exterior',
-//     view: '192k',
-//   },
-//   {
-//     stoneCategory: 'Stone Bricks',
-//     stoneColor: 'Marble',
-//     category: 'Interior',
-//     view: '129k',
-//   },
-//   {
-//     stoneCategory: 'Sandstone',
-//     stoneColor: 'Brown',
-//     category: 'Fireplace',
-//     view: '98k',
-//   },
-//   {
-//     stoneCategory: 'Quartzite',
-//     stoneColor: 'Basalt',
-//     category: 'Exterior',
-//     view: '82k',
-//   },
-//   {
-//     stoneCategory: 'Slate',
-//     stoneColor: 'Onyx',
-//     category: 'Interior',
-//     view: '80k',
-//   },
-//   {
-//     stoneCategory: 'Travertine',
-//     stoneColor: 'Hedge Stone',
-//     category: 'Fireplace',
-//     view: '75k',
-//   },
-//   {
-//     stoneCategory: 'Onyx',
-//     stoneColor: 'Quartzite',
-//     category: 'Interior',
-//     view: '65k',
-//   },
-//   {
-//     stoneCategory: 'Flint',
-//     stoneColor: 'Gneiss',
-//     category: 'Exterior',
-//     view: '64k',
-//   },
-//   {
-//     stoneCategory: 'Granite',
-//     stoneColor: 'Marble',
-//     category: 'Fireplace',
-//     view: '35k',
-//   },
-//   {
-//     stoneCategory: 'Gneiss',
-//     stoneColor: 'Limestone',
-//     category: 'Fireplace',
-//     view: '15k',
-//   },
-// ],
-// )
-
 const indexedItems = computed(() => {
   return items.value.map((item, index) => {
     return { ...item, index: index + 1 } // Add 1 to start the index at 1 instead of 0
@@ -87,7 +46,10 @@ const indexedItems = computed(() => {
 const fetch = async () => {
   loading.value = true
   try {
-    const response = await axiosIns.get('https://selkirkappapi-staging.azurewebsites.net/api/analytics/stone-stats/')
+    let url = 'https://selkirkappapi-staging.azurewebsites.net/api/analytics/stone-stats/'
+    if (dateRange.value) url += `?start=${dateWithoutTimezone(dateRange.value[0])}&end=${dateWithoutTimezone(dateRange.value[dateRange.value.length - 1], 1)}`
+
+    const response = await axiosIns.get(url)
 
     items.value = response.data
   }
@@ -100,6 +62,7 @@ const fetch = async () => {
 }
 
 onMounted(() => {
+  dateRange.value = getDefaultDateRange()
   fetch()
 })
 </script>
@@ -113,6 +76,21 @@ onMounted(() => {
       <VCol
         cols="12"
         md="3"
+      >
+        <VDateInput 
+          v-model="dateRange" 
+          variant="outlined" 
+          color="primary" 
+          label="Date range" 
+          multiple="range"
+          :disabled="loading"
+          v-on:update:model-value="fetch"
+          hide-details
+        />
+      </VCol>
+      <VCol
+        cols="12"
+        md="2"
       >
         <VTextField
           v-model="search"
