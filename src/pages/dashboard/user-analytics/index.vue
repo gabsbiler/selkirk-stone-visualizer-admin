@@ -14,9 +14,9 @@ const days = ref(30)
 const getDefaultDateRange = () => {
   const start = new Date()
   start.setHours(0, 0, 0, 0)
-  start.setDate(start.getDate() - 30)
+  start.setDate(start.getDate() - 1)
   const end = new Date(start.getTime())
-  end.setDate(end.getDate() + 30)
+  end.setDate(end.getDate() + 1)
   var range = []
   while (start <= end) {
     range.push(new Date(start))
