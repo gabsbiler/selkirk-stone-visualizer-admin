@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import { VDataTable } from 'vuetify/labs/VDataTable'
 import axiosIns from '@/plugins/axios'
+import { VDataTable } from 'vuetify/components'
 
 const headers = [
   { title: 'ID', key: 'id', sortable: false },

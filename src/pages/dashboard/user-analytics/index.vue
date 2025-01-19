@@ -4,15 +4,41 @@ import MostUsedBrowser from '@/layouts/components/dashboard/userAnalytics/MostUs
 import UserAnalyticsCards from '@/layouts/components/dashboard/userAnalytics/UserAnalyticsCards.vue'
 import UsersNewVisitor from '@/layouts/components/dashboard/userAnalytics/usersNewVisitor.vue'
 import axios from '@axios'
+import { VDateInput } from 'vuetify/labs/VDateInput'
 
+const dateRange = ref()
 const loading = ref(true)
 const data = ref({})
 const days = ref(30)
 
+const getDefaultDateRange = () => {
+  const start = new Date()
+  start.setHours(0, 0, 0, 0)
+  start.setDate(start.getDate() - 1)
+  const end = new Date(start.getTime())
+  end.setDate(end.getDate() + 1)
+  var range = []
+  while (start <= end) {
+    range.push(new Date(start))
+    start.setDate(start.getDate() + 1)
+  }
+  return range
+}
+
+const dateWithoutTimezone = (date, additionalDays) => {
+  const tzoffset = date.getTimezoneOffset() * 60000
+  const withoutTimezoneDate = new Date(date.valueOf() - tzoffset)
+  if (additionalDays) withoutTimezoneDate.setDate(withoutTimezoneDate.getDate() + additionalDays)
+  return withoutTimezoneDate.toISOString().slice(0, -1)
+}
+
 const getData = async () => {
   loading.value = true
 
-  const response = await axios.get(`/analytics/user-data?days=${days.value}`)
+  let url = '/analytics/user-data'
+  if (dateRange.value) url += `?start=${dateWithoutTimezone(dateRange.value[0])}&end=${dateWithoutTimezone(dateRange.value[dateRange.value.length - 1], 1)}`
+
+  const response = await axios.get(url)
 
   data.value = response.data
   loading.value = false
@@ -21,6 +47,7 @@ const getData = async () => {
 watch(days, () => getData(), {})
 
 onMounted(() => {
+  dateRange.value = getDefaultDateRange()
   getData()
 })
 </script>
@@ -30,12 +57,17 @@ onMounted(() => {
     <VRow>
       <VCol cols="12">
         <VCard>
-          <VSelect
-            v-model="days"
-            :items="[{ title: 'Last 30 days', value: 30 }, { title: 'Last 60 days', value: 60 }, { title: 'Last 90 days', value: 90 }]"
-            :disabled="loading"
+          <VDateInput 
+            v-model="dateRange" 
+            variant="solo" 
             density="compact"
-            variant="solo"
+            color="primary" 
+            label="Date range" 
+            multiple="range"
+            :disabled="loading"
+            v-on:update:model-value="getData"
+            hide-details
+            prepend-icon=""
           />
         </VCard>
       </VCol>

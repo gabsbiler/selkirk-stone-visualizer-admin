@@ -1,8 +1,8 @@
 <script setup lang="ts">
-import { VDataTable } from 'vuetify/labs/VDataTable'
 import Loading from '@/layouts/components/Loading.vue'
 import SnackBar from '@/layouts/components/SnackBar.vue'
 import axios from '@axios'
+import { VDataTable } from 'vuetify/components'
 
 const props = defineProps({
   search: String,
