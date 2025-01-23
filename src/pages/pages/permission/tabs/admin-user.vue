@@ -25,7 +25,7 @@ const headers = [
   { title: 'USER', key: 'first_name' },
   { title: 'EMAIL', key: 'email' },
   { title: 'PERMISSION', key: 'permissions' },
-  { title: 'ACTION', key: 'action' },
+  { title: 'ACTION', key: 'action', align: 'end' },
 ]
 
 const addUser = ref({
@@ -58,7 +58,7 @@ const deleteUser = async () => {
   deletePrompt.value = false
   isDeleteLoading.value = true
   try {
-    const response = await axios.delete(`/users/get-users/${selectedUser.value.raw.id}/`)
+    const response = await axios.delete(`/users/get-users/${selectedUser.value.id}/`)
 
     SnackBarRef.value.show('success', 'User Deleted Succesfully')
     isDialogVisible.value = false
@@ -89,21 +89,20 @@ const getUsers = async () => {
 }
 
 const updateUser = async () => {
-  console.log(selectedUser.value.raw)
   isEditLoading.value = true
   try {
-    const response = await axios.patch(`/users/get-users/${selectedUser.value.raw.id}/`, {
-      address: selectedUser.value.raw.address,
-      contact_number: selectedUser.value.raw.contact_number,
-      email: selectedUser.value.raw.email,
-      first_name: selectedUser.value.raw.first_name,
-      last_name: selectedUser.value.raw.last_name,
+    const response = await axios.patch(`/users/get-users/${selectedUser.value.id}/`, {
+      address: selectedUser.value.address,
+      contact_number: selectedUser.value.contact_number,
+      email: selectedUser.value.email,
+      first_name: selectedUser.value.first_name,
+      last_name: selectedUser.value.last_name,
       permissions: {
-        is_administrator: selectedUser.value.raw.permissions.is_administrator,
-        is_analytics: selectedUser.value.raw.permissions.is_analytics,
-        is_content_managing: selectedUser.value.raw.permissions.is_content_managing,
-        is_product_managing: selectedUser.value.raw.permissions.is_product_managing,
-        is_support: selectedUser.value.raw.permissions.is_support,
+        is_administrator: selectedUser.value.permissions.is_administrator,
+        is_analytics: selectedUser.value.permissions.is_analytics,
+        is_content_managing: selectedUser.value.permissions.is_content_managing,
+        is_product_managing: selectedUser.value.permissions.is_product_managing,
+        is_support: selectedUser.value.permissions.is_support,
       },
     })
 
@@ -156,50 +155,54 @@ onMounted(() => {
       :search="props.search"
       :loading="loading"
     >
-      <template #item.permissions="{ item }">
-        <span
-          v-for="(value, key) in item.props.title.permissions"
-          :key="key"
-        >
-
-          <VIcon
-            v-if="key.toString() === 'is_administrator' && value === true"
-            icon="bx-user"
-            :class="key"
-          />
-          <VIcon
-            v-if="key.toString() === 'is_analytics' && value === true"
-            icon="bx-stats"
-            :class="key"
-          />
-          <VIcon
-            v-if="key.toString() === 'is_support' && value === true"
-            icon="bx-headphone"
-            :class="key"
-          />
-          <VIcon
-            v-if="key.toString() === 'is_product_managing' && value === true"
-            icon="bx-box"
-            :class="key"
-          />
-          <VIcon
-            v-if="key.toString() === 'is_content_managing' && value === true"
-            icon="bx-edit"
-            :class="key"
-          />
-        </span>
-      </template>
-
-      <template #item.action="{ item }">
-        <div class="flex-center">
-          <VBtn
-            variant="text"
-            size="small"
-            @click="() => selectUser(item)"
-          >
-            Edit
-          </VBtn>
-        </div>
+      <template v-slot:item="{item}">
+        <tr>
+          <td>{{ item.first_name }}</td>
+          <td>{{ item.email }}</td>
+          <td>
+            <span
+              v-for="(value, key) in item.permissions"
+              :key="key"
+            >
+              <VIcon
+                v-if="key.toString() === 'is_administrator' && value === true"
+                icon="bx-user"
+                :class="key"
+              />
+              <VIcon
+                v-if="key.toString() === 'is_analytics' && value === true"
+                icon="bx-stats"
+                :class="key"
+              />
+              <VIcon
+                v-if="key.toString() === 'is_support' && value === true"
+                icon="bx-headphone"
+                :class="key"
+              />
+              <VIcon
+                v-if="key.toString() === 'is_product_managing' && value === true"
+                icon="bx-box"
+                :class="key"
+              />
+              <VIcon
+                v-if="key.toString() === 'is_content_managing' && value === true"
+                icon="bx-edit"
+                :class="key"
+              />
+            </span>
+          </td>
+          <td class="v-data-table__td v-data-table-column--align-end">
+            <div class="flex-center">
+              <VBtn
+                variant="text"
+                size="small"
+                @click="() => selectUser(item)"
+              >
+                Edit
+              </VBtn>
+            </div>
+          </td>
+        </tr>
       </template>
     </VDataTable>
 

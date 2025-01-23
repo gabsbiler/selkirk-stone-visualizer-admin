@@ -13,12 +13,12 @@ const sampleScene = ref({ variants: {} })
 const products = ref([])
 const breadcrumbs = ref([])
 const tab = ref([])
-const headers = ref([
+const headers = [
     { title: 'Id', key: 'id' },
     { title: 'Color', key: 'color', sortable: false },
     { title: 'Image', key: 'image', sortable: false },
     { title: 'Actions', key: 'actions', align: 'end', sortable: false },
-])
+]
 
 const dialog = ref(false)
 const deleteDialog = ref(false)
@@ -240,36 +240,38 @@ onMounted(() => {
               :items="sampleScene.variants['colors']" 
               mobile-breakpoint="800"
               class="elevation-0">
-              <template v-slot:item.actions="{ item }">
-                  <div class="text-truncate">
-                    <VBtn
-                      small
-                      class="mr-2"
-                      @click="showEditDialog(item.props.title)"
-                      color="primary" size="small"
-                      v-bind:disabled="loading"
-                    >
-                    <VIcon>mdi-pencil</VIcon>
-                    </VBtn>
-                    <VBtn
-                      small
-                      @click="confirmDeleteItem(item.props.title)"
-                      color="error" size="small"
-                      v-bind:disabled="loading"
-                    >
-                      <VIcon>mdi-delete</VIcon>
-                    </VBtn>
-                </div>
-              </template>
-              <template v-slot:item.id="{ item }">
-                  #{{ item.props.title.id }}
-              </template>
-              <template v-slot:item.color="{ item }">
-                  <img v-bind:src="products.find(x => x.name === item.props.title.color)?.image" style="block-size: 100px; inline-size: auto;" />
-                  {{ item.props.title.color }}
-              </template>
-              <template v-slot:item.image="{ item }">
-                  <img v-bind:src="item.props.title.image" style="block-size: 100px; inline-size: auto;" />
+              <template v-slot:item="{item}">
+                <tr>
+                  <td>#{{ item.id }}</td>
+                  <td>
+                    <img v-bind:src="products.find(x => x.name === item.color)?.image" style="block-size: 100px; inline-size: auto;" />
+                    {{ item.color }}
+                  </td>
+                  <td>
+                    <img v-bind:src="item.image" style="block-size: 100px; inline-size: auto;" />
+                  </td>
+                  <td class="v-data-table__td v-data-table-column--align-end">
+                    <div class="text-truncate">
+                      <VBtn
+                        small
+                        class="mr-2"
+                        @click="showEditDialog(item)"
+                        color="primary" size="small"
+                        v-bind:disabled="loading"
+                      >
+                      <VIcon>mdi-pencil</VIcon>
+                      </VBtn>
+                      <VBtn
+                        small
+                        @click="confirmDeleteItem(item)"
+                        color="error" size="small"
+                        v-bind:disabled="loading"
+                      >
+                        <VIcon>mdi-delete</VIcon>
+                      </VBtn>
+                    </div>
+                  </td>
+                </tr>
               </template>
             </VDataTable>
           </template>
@@ -281,36 +283,38 @@ onMounted(() => {
                   :items="sampleScene.variants[variant]" 
                   mobile-breakpoint="800"
                   class="elevation-0">
-                  <template v-slot:item.actions="{ item }">
-                      <div class="text-truncate">
-                        <VBtn
-                          small
-                          class="mr-2"
-                          @click="showEditDialog(item.props.title)"
-                          color="primary" size="small"
-                          v-bind:disabled="loading"
-                        >
-                        <VIcon>mdi-pencil</VIcon>
-                        </VBtn>
-                        <VBtn
-                          small
-                          @click="confirmDeleteItem(item.props.title)"
-                          color="error" size="small"
-                          v-bind:disabled="loading"
-                        >
-                          <VIcon>mdi-delete</VIcon>
-                        </VBtn>
-                    </div>
-                  </template>
-                  <template v-slot:item.id="{ item }">
-                      #{{ item.props.title.id }}
-                  </template>
-                  <template v-slot:item.color="{ item }">
-                      <img v-bind:src="products.find(x => x.name === item.props.title.variant_name)?.colors?.find(x => x.name === item.props.title.color)?.image" style="block-size: 100px; inline-size: auto;" />
-                      {{ item.props.title.color }}
-                  </template>
-                  <template v-slot:item.image="{ item }">
-                      <img v-bind:src="item.props.title.image" style="block-size: 100px; inline-size: auto;" />
+                  <template v-slot:item="{item}">
+                    <tr>
+                      <td>#{{ item.id }}</td>
+                      <td>
+                        <img v-bind:src="products.find(x => x.name === item.variant_name)?.colors?.find(x => x.name === item.color)?.image" style="block-size: 100px; inline-size: auto;" />
+                        {{ item.color }}
+                      </td>
+                      <td>
+                        <img v-bind:src="item.image" style="block-size: 100px; inline-size: auto;" />
+                      </td>
+                      <td class="v-data-table__td v-data-table-column--align-end">
+                        <div class="text-truncate">
+                          <VBtn
+                            small
+                            class="mr-2"
+                            @click="showEditDialog(item)"
+                            color="primary" size="small"
+                            v-bind:disabled="loading"
+                          >
+                          <VIcon>mdi-pencil</VIcon>
+                          </VBtn>
+                          <VBtn
+                            small
+                            @click="confirmDeleteItem(item)"
+                            color="error" size="small"
+                            v-bind:disabled="loading"
+                          >
+                            <VIcon>mdi-delete</VIcon>
+                          </VBtn>
+                        </div>
+                      </td>
+                    </tr>
                   </template>
                 </VDataTable>
               </VWindowItem>

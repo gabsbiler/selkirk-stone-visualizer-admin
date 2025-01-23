@@ -53,18 +53,18 @@ onMounted(() => {
           :headers="headers"
           :items="data"
         >
-          <template #item.raw_image="{ item }">
+          <template v-slot:item.raw_image="{ value }">
             <a
-              :href="item.raw.raw_image"
+              :href="value"
               target="_blank"
-            >{{ truncate(item.raw.raw_image, 30) }}</a>
+            >{{ truncate(value, 30) }}</a>
           </template>
 
-          <template #item.edited_image="{ item }">
+          <template v-slot:item.edited_image="{ value }">
             <a
-              :href="item.raw.raw_image"
+              :href="value"
               target="_blank"
-            >{{ truncate(item.raw.edited_image, 30) }}</a>
+            >{{ truncate(value, 30) }}</a>
           </template>
         </VDataTable>
       </VCardText>

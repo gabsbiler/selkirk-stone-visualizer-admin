@@ -68,20 +68,25 @@ const formatNumber = num => {
         :headers="headers"
         items-per-page="5"
       >
-        <template #item.visits="{ item }">
-          {{ formatNumber(item.props.title.visits) }}
-        </template>
-
-        <template #item.dataInPercentage="{ item }">
-          <VProgressLinear
-            v-model="item.props.title.dataInPercentage"
-            color="primary"
-            height="20"
-          >
-            <template #default="{ value }">
-              {{ Math.ceil(value) }}%
-            </template>
-          </VProgressLinear>
+        <template v-slot:item="{ item }">
+          <tr>
+            <td>{{ item.stoneVariant }}</td>
+            <td>{{ item.location }}</td>
+            <td>
+              {{ formatNumber(item.visits) }}
+            </td>
+            <td>
+              <VProgressLinear
+                v-model="item.dataInPercentage"
+                color="primary"
+                height="20"
+              >
+                <template #default="{ value }">
+                  {{ Math.ceil(value) }}%
+                </template>
+              </VProgressLinear>
+            </td>
+          </tr>
         </template>
       </VDataTable>
     </VCardText>

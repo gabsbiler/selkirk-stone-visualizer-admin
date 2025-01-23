@@ -9,14 +9,14 @@ const props = defineProps<{
 
 const data = ref([])
 const breadcrumbs = ref([])
-const headers = ref([
+const headers = [
     { title: 'Id', key: 'id' },
     { title: 'Image', key: 'image', sortable: false },
     { title: 'Thumbnail', key: 'image_thumbnail', sortable: false },
     { title: 'Name', key: 'name', sortable: false },
     { title: 'Is Available', key: 'is_available', sortable: false },
     { title: 'Actions', key: 'actions', align: 'end', sortable: false },
-])
+]
 
 const dialog = ref(false)
 const deleteDialog = ref(false)
@@ -229,38 +229,39 @@ onMounted(() => {
             :items="data" 
             mobile-breakpoint="800"
             class="elevation-0">
-          <template v-slot:item.actions="{ item }">
-              <div class="text-truncate">
-                <VBtn
-                  small
-                  class="mr-2"
-                  @click="showEditDialog(item.props.title)"
-                  color="primary" size="small"
-                  v-bind:disabled="loading"
-                >
-                 <VIcon>mdi-pencil</VIcon>
-                </VBtn>
-                <VBtn
-                  small
-                  @click="confirmDeleteItem(item.props.title)"
-                  color="error" size="small"
-                  v-bind:disabled="loading"
-                >
-                  <VIcon>mdi-delete</VIcon>
-                </VBtn>
-            </div>
-          </template>
-          <template v-slot:item.id="{ item }">
-              #{{ item.props.title.id }}
-          </template>
-          <template v-slot:item.is_available="{ item }">
-              {{ item.props.title.is_available ? "Yes" : "No" }}
-          </template>
-          <template v-slot:item.image="{ item }">
-              <img v-bind:src="item.props.title.image" style="block-size: 100px; inline-size: auto;" />
-          </template>
-          <template v-slot:item.image_thumbnail="{ item }">
-              <img v-bind:src="item.props.title.image_thumbnail" style="block-size: 100px; inline-size: auto;" />
+          <template v-slot:item="{item}">
+            <tr>
+              <td>#{{ item.id }}</td>
+              <td>
+                <img v-bind:src="item.image" style="block-size: 100px; inline-size: auto;" />
+              </td>
+              <td>
+                <img v-bind:src="item.image_thumbnail" style="block-size: 100px; inline-size: auto;" />
+              </td>
+              <td>{{ item.name }}</td>
+              <td>{{ item.is_available ? "Yes" : "No" }}</td>
+              <td class="v-data-table__td v-data-table-column--align-end">
+                <div class="text-truncate">
+                  <VBtn
+                    small
+                    class="mr-2"
+                    @click="showEditDialog(item)"
+                    color="primary" size="small"
+                    v-bind:disabled="loading"
+                  >
+                  <VIcon>mdi-pencil</VIcon>
+                  </VBtn>
+                  <VBtn
+                    small
+                    @click="confirmDeleteItem(item)"
+                    color="error" size="small"
+                    v-bind:disabled="loading"
+                  >
+                    <VIcon>mdi-delete</VIcon>
+                  </VBtn>
+              </div>
+              </td>
+            </tr>
           </template>
         </VDataTable>
       </VCardText>
