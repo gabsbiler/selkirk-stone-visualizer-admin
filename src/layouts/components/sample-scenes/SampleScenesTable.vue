@@ -199,44 +199,46 @@ onMounted(() => {
             :items="data" 
             mobile-breakpoint="800"
             class="elevation-0">
-          <template v-slot:item.actions="{ item }">
-              <div class="text-truncate">
-                <VBtn
-                  small
-                  class="mr-2"
-                  :href="'/sample-scenes/' + type + '/' + item.props.title.id"
-                  color="secondary" size="small"
-                  v-bind:disabled="loading"
-                >
-                 <VIcon>mdi-view-list</VIcon>
-                </VBtn>
-                <VBtn
-                  small
-                  class="mr-2"
-                  @click="showEditDialog(item.props.title)"
-                  color="primary" size="small"
-                  v-bind:disabled="loading"
-                >
-                 <VIcon>mdi-pencil</VIcon>
-                </VBtn>
-                <VBtn
-                  small
-                  @click="confirmDeleteItem(item.props.title)"
-                  color="error" size="small"
-                  v-bind:disabled="loading"
-                >
-                  <VIcon>mdi-delete</VIcon>
-                </VBtn>
-            </div>
-          </template>
-          <template v-slot:item.id="{ item }">
-              #{{ item.props.title.id }}
-          </template>
-          <template v-slot:item.image="{ item }">
-              <img v-bind:src="item.props.title.image" style="block-size: 100px; inline-size: auto;" />
-          </template>
-          <template v-slot:item.hover="{ item }">
-              <img v-bind:src="item.props.title.hover" style="block-size: 100px; inline-size: auto;" />
+          <template v-slot:item="{ item }">
+            <tr>
+              <td>#{{ item.id }}</td>
+              <td>
+                <img v-bind:src="item.image" style="block-size: 100px; inline-size: auto;" />
+              </td>
+              <td>
+                <img v-bind:src="item.hover" style="block-size: 100px; inline-size: auto;" />
+              </td>
+              <td class="v-data-table__td v-data-table-column--align-end">
+                <div class="text-truncate">
+                  <VBtn
+                    small
+                    class="mr-2"
+                    :href="'/sample-scenes/' + type + '/' + item.id"
+                    color="secondary" size="small"
+                    v-bind:disabled="loading"
+                  >
+                  <VIcon>mdi-view-list</VIcon>
+                  </VBtn>
+                  <VBtn
+                    small
+                    class="mr-2"
+                    @click="showEditDialog(item)"
+                    color="primary" size="small"
+                    v-bind:disabled="loading"
+                  >
+                  <VIcon>mdi-pencil</VIcon>
+                  </VBtn>
+                  <VBtn
+                    small
+                    @click="confirmDeleteItem(item)"
+                    color="error" size="small"
+                    v-bind:disabled="loading"
+                  >
+                    <VIcon>mdi-delete</VIcon>
+                  </VBtn>
+              </div>
+              </td>
+            </tr>
           </template>
         </VDataTable>
       </VCardText>

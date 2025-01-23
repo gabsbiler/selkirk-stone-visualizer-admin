@@ -104,8 +104,8 @@ onMounted(() => {
         :items="indexedItems"
         :search="search"
       >
-        <template v-slot:item.index="{ item }">
-          {{ item.value.index }}
+        <template v-slot:item.index="{ value }">
+          {{ value }}
         </template>
       </VDataTable>
     </VCardText>

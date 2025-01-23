@@ -20,7 +20,7 @@ const headers = [
   { title: 'LASTNAME', key: 'last_name' },
   { title: 'CONTACT', key: 'contact_number' },
   { title: 'ADDRESS', key: 'address' },
-  { title: 'ACTION', key: 'action', width: 150, align: 'center' },
+  { title: 'ACTION', key: 'action', width: 150, align: 'end' },
 ]
 
 const getUsers = async () => {
@@ -110,46 +110,53 @@ onMounted(async () => {
       :items-per-page="12"
       :search="props.search"
     >
-      <template v-slot:item.action="{ item }">
-        <div>
-          <VTooltip text="Send Reset Password">
-            <template #activator="{ props }">
-              <VBtn
-                v-bind="props"
-                icon="mdi-lock-reset"
-                density="compact"
-                variant="text"
-                @click="sendResetPassword(item.raw.email)"
-              />
-            </template>
-          </VTooltip>
-          <VTooltip text="Email Verification">
-            <template #activator="{ props }">
-              <VBtn
-                v-bind="props"
-                icon="mdi-email"
-                density="compact"
-                variant="text"
-                @click="resendVerificationEmail(item.raw.email)"
-              />
-            </template>
-          </VTooltip>
-          <VTooltip text="Delete User">
-            <template #activator="{ props }">
-              <VBtn
-                v-bind="props"
-                icon="mdi-trash"
-                density="compact"
-                variant="text"
-                :loading="isDeleteLoading"
-                @click="() => {
-                  selectedUser = item.raw.id
-                  deletePrompt = true
-                }"
-              />
-            </template>
-          </VTooltip>
-        </div>
+      <template v-slot:item="{item}">
+        <tr>
+          <td>{{ item.email }}</td>
+          <td>{{ item.first_name }}</td>
+          <td>{{ item.last_name }}</td>
+          <td>{{ item.contact_number }}</td>
+          <td>{{ item.address }}</td>
+          <td class="v-data-table__td v-data-table-column--align-end">
+            <VTooltip text="Send Reset Password">
+              <template #activator="{ props }">
+                <VBtn
+                  v-bind="props"
+                  icon="mdi-lock-reset"
+                  density="compact"
+                  variant="text"
+                  @click="sendResetPassword(item.email)"
+                />
+              </template>
+            </VTooltip>
+            <VTooltip text="Email Verification">
+              <template #activator="{ props }">
+                <VBtn
+                  v-bind="props"
+                  icon="mdi-email"
+                  density="compact"
+                  variant="text"
+                  @click="resendVerificationEmail(item.email)"
+                />
+              </template>
+            </VTooltip>
+            <VTooltip text="Delete User">
+              <template #activator="{ props }">
+                <VBtn
+                  v-bind="props"
+                  icon="mdi-trash"
+                  density="compact"
+                  variant="text"
+                  :loading="isDeleteLoading"
+                  @click="() => {
+                    selectedUser = item.id
+                    deletePrompt = true
+                  }"
+                />
+              </template>
+            </VTooltip>
+          </td>
+        </tr>
       </template>
     </VDataTable>
     <SnackBar ref="SnackBarRef" />
