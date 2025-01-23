@@ -68,11 +68,11 @@ const formatNumber = num => {
         :headers="headers"
         items-per-page="5"
       >
-        <template #item.visits="{ item }">
+        <template v-slot:item.visits="{ item }">
           {{ formatNumber(item.props.title.visits) }}
         </template>
 
-        <template #item.dataInPercentage="{ item }">
+        <template v-slot:item.dataInPercentage="{ item }">
           <VProgressLinear
             v-model="item.props.title.dataInPercentage"
             color="primary"

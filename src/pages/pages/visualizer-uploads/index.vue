@@ -53,14 +53,14 @@ onMounted(() => {
           :headers="headers"
           :items="data"
         >
-          <template #item.raw_image="{ item }">
+          <template v-slot:item.raw_image="{ item }">
             <a
               :href="item.raw.raw_image"
               target="_blank"
             >{{ truncate(item.raw.raw_image, 30) }}</a>
           </template>
 
-          <template #item.edited_image="{ item }">
+          <template v-slot:item.edited_image="{ item }">
             <a
               :href="item.raw.raw_image"
               target="_blank"

@@ -104,7 +104,7 @@ const indexedItems = computed(() => {
         :items="indexedItems"
         :search="search"
       >
-        <template #item.index="{ item }">
+        <template v-slot:item.index="{ item }">
           {{ item.value.index }}
         </template>
       </VDataTable>

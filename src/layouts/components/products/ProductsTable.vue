@@ -4,14 +4,14 @@ import axios from '@axios'
 import { VDataTable } from 'vuetify/components'
 
 const data = ref([])
-const headers = ref([
+const headers = [
     { title: 'Id', key: 'id' },
     { title: 'Image', key: 'image', sortable: false },
     { title: 'Name', key: 'name', sortable: false },
     { title: 'Status', key: 'status', sortable: false },
     { title: 'Is In Stock', key: 'isInStock', sortable: false },
     { title: 'Actions', key: 'actions', align: 'end', sortable: false },
-])
+]
 
 const dialog = ref(false)
 const deleteDialog = ref(false)

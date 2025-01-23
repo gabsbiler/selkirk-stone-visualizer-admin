@@ -9,12 +9,12 @@ const props = defineProps<{
 
 const { type } = toRefs(props)
 const data = ref([])
-const headers = ref([
+const headers = [
     { title: 'Id', key: 'id' },
     { title: 'Image', key: 'image', sortable: false },
     { title: 'Hover', key: 'hover', sortable: false },
     { title: 'Actions', key: 'actions', align: 'end', sortable: false },
-])
+]
 
 const dialog = ref(false)
 const deleteDialog = ref(false)

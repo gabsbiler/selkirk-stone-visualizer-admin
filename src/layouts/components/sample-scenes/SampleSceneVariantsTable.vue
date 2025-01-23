@@ -13,12 +13,12 @@ const sampleScene = ref({ variants: {} })
 const products = ref([])
 const breadcrumbs = ref([])
 const tab = ref([])
-const headers = ref([
+const headers = [
     { title: 'Id', key: 'id' },
     { title: 'Color', key: 'color', sortable: false },
     { title: 'Image', key: 'image', sortable: false },
     { title: 'Actions', key: 'actions', align: 'end', sortable: false },
-])
+]
 
 const dialog = ref(false)
 const deleteDialog = ref(false)

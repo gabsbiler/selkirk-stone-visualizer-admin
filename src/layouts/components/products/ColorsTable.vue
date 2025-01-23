@@ -9,14 +9,14 @@ const props = defineProps<{
 
 const data = ref([])
 const breadcrumbs = ref([])
-const headers = ref([
+const headers = [
     { title: 'Id', key: 'id' },
     { title: 'Image', key: 'image', sortable: false },
     { title: 'Thumbnail', key: 'image_thumbnail', sortable: false },
     { title: 'Name', key: 'name', sortable: false },
     { title: 'Is Available', key: 'is_available', sortable: false },
     { title: 'Actions', key: 'actions', align: 'end', sortable: false },
-])
+]
 
 const dialog = ref(false)
 const deleteDialog = ref(false)

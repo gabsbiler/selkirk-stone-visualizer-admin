@@ -156,7 +156,7 @@ onMounted(() => {
       :search="props.search"
       :loading="loading"
     >
-      <template #item.permissions="{ item }">
+      <template v-slot:item.permissions="{ item }">
         <span
           v-for="(value, key) in item.props.title.permissions"
           :key="key"

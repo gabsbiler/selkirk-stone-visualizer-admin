@@ -110,7 +110,7 @@ onMounted(async () => {
       :items-per-page="12"
       :search="props.search"
     >
-      <template #item.action="{ item }">
+      <template v-slot:item.action="{ item }">
         <div>
           <VTooltip text="Send Reset Password">
             <template #activator="{ props }">
