@@ -159,7 +159,7 @@ onMounted(() => {
         <tr>
           <td>{{ item.first_name }}</td>
           <td>{{ item.email }}</td>
-          <td class="v-data-table__td v-data-table-column--align-end">
+          <td>
             <span
               v-for="(value, key) in item.permissions"
               :key="key"
@@ -191,7 +191,7 @@ onMounted(() => {
               />
             </span>
           </td>
-          <td>
+          <td class="v-data-table__td v-data-table-column--align-end">
             <div class="flex-center">
               <VBtn
                 variant="text"
