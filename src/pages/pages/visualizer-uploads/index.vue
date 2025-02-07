@@ -7,6 +7,7 @@ const headers = [
   { title: 'Uploads', key: 'raw_image' },
   { title: 'Visualized', key: 'edited_image' },
   { title: 'Date Uploaded', key: 'uploaded_at' },
+  { title: 'Uploaded By', key: 'uploaded_by' },
 ]
 
 const data = ref()
